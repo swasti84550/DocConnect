@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - DocConnect</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #0066cc;
+            --light-blue: #e6f2ff;
+            --dark-blue: #004499;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --border-color: #e0e0e0;
+            --success-green: #28a745;
+            --danger-red: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue) !important;
+            text-decoration: none;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-blue) !important;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Appointment Form */
+        .appointment-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .appointment-form {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: var(--light-blue);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        .form-body {
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0,102,204,0.25);
+        }
+
+        .selected-doctor {
+            background: var(--light-blue);
+            border: 2px solid var(--primary-blue);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .selected-doctor h4 {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Time Slots */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .time-slot {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+
+        .time-slot.selected {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .time-slot.disabled {
+            background: #f8f9fa;
+            color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .time-slot .time {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .time-slot .status {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Date Selection */
+        .date-selection {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+
+        .date-option {
+            min-width: 100px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-option:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+
+        .date-option.selected {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .date-option .day {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .date-option .date {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0.25rem 0;
+        }
+
+        .date-option .month {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Symptoms Section */
+        .symptoms-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .symptom-tag {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .symptom-tag:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .symptom-tag.selected {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-light);
+            border: 2px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--border-color);
+        }
+
+        .btn-submit {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+
+        .progress-step {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-step.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .progress-step.completed {
+            background: var(--success-green);
+            color: white;
+            border-color: var(--success-green);
+        }
+
+        .step-label {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-green);
+            margin-bottom: 1rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn-back, .btn-submit {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-hospital"></i> DocConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="doctors.html">Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="appointment.html">Book Appointment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-primary" style="border-radius: 25px; padding: 0.5rem 1.5rem;">Book Now</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Book Your Appointment</h1>
+            <p>Schedule your visit with just a few clicks</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="appointment-container">
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="progress-step active">
+                    1
+                    <span class="step-label">Select Doctor</span>
+                </div>
+                <div class="progress-step">
+                    2
+                    <span class="step-label">Choose Date & Time</span>
+                </div>
+                <div class="progress-step">
+                    3
+                    <span class="step-label">Patient Details</span>
+                </div>
+                <div class="progress-step">
+                    4
+                    <span class="step-label">Confirmation</span>
+                </div>
+            </div>
+
+            <!-- Appointment Form -->
+            <div class="appointment-form">
+                <div class="form-header">
+                    <h2>Schedule Your Visit</h2>
+                    <p>Fill in the details below to book your appointment</p>
+                </div>
+
+                <form id="appointmentForm">
+                    <div class="form-body">
+                        <!-- Step 1: Doctor Selection -->
+                        <div class="form-section" id="step1">
+                            <h3><i class="bi bi-person-badge"></i> Select Doctor</h3>
+                            
+                            <div class="selected-doctor" id="selectedDoctorInfo">
+                                <h4 id="doctorName">Dr. Sarah Johnson</h4>
+                                <p id="doctorSpecialty">Cardiologist • Medical Center, Downtown</p>
+                                <p id="doctorExperience">15 years experience • Rating: 4.8/5</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Or choose a different doctor:</label>
+                                <select class="form-select" id="doctorSelect">
+                                    <option value="Dr. Sarah Johnson" selected>Dr. Sarah Johnson - Cardiologist</option>
+                                    <option value="Dr. Michael Chen">Dr. Michael Chen - Dermatologist</option>
+                                    <option value="Dr. Emily Rodriguez">Dr. Emily Rodriguez - Pediatrician</option>
+                                    <option value="Dr. James Wilson">Dr. James Wilson - Orthopedic Surgeon</option>
+                                    <option value="Dr. Lisa Anderson">Dr. Lisa Anderson - Neurologist</option>
+                                    <option value="Dr. Robert Taylor">Dr. Robert Taylor - General Physician</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Date & Time Selection -->
+                        <div class="form-section" id="step2">
+                            <h3><i class="bi bi-calendar3"></i> Select Date & Time</h3>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Choose Date:</label>
+                                <div class="date-selection">
+                                    <div class="date-option selected" data-date="2024-02-10">
+                                        <div class="day">Today</div>
+                                        <div class="date">10</div>
+                                        <div class="month">Feb</div>
+                                    </div>
+                                    <div class="date-option" data-date="2024-02-11">
+                                        <div class="day">Tomorrow</div>
+                                        <div class="date">11</div>
+                                        <div class="month">Feb</div>
+                                    </div>
+                                    <div class="date-option" data-date="2024-02-12">
+                                        <div class="day">Mon</div>
+                                        <div class="date">12</div>
+                                        <div class="month">Feb</div>
+                                    </div>
+                                    <div class="date-option" data-date="2024-02-13">
+                                        <div class="day">Tue</div>
+                                        <div class="date">13</div>
+                                        <div class="month">Feb</div>
+                                    </div>
+                                    <div class="date-option" data-date="2024-02-14">
+                                        <div class="day">Wed</div>
+                                        <div class="date">14</div>
+                                        <div class="month">Feb</div>
+                                    </div>
+                                    <div class="date-option" data-date="2024-02-15">
+                                        <div class="day">Thu</div>
+                                        <div class="date">15</div>
+                                        <div class="month">Feb</div>
+                                    </div>
+                                    <div class="date-option" data-date="2024-02-16">
+                                        <div class="day">Fri</div>
+                                        <div class="date">16</div>
+                                        <div class="month">Feb</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Available Time Slots:</label>
+                                <div class="time-slots">
+                                    <div class="time-slot" data-time="09:00">
+                                        <div class="time">9:00 AM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot" data-time="09:30">
+                                        <div class="time">9:30 AM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot disabled" data-time="10:00">
+                                        <div class="time">10:00 AM</div>
+                                        <div class="status">Booked</div>
+                                    </div>
+                                    <div class="time-slot" data-time="10:30">
+                                        <div class="time">10:30 AM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot" data-time="11:00">
+                                        <div class="time">11:00 AM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot" data-time="11:30">
+                                        <div class="time">11:30 AM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot disabled" data-time="14:00">
+                                        <div class="time">2:00 PM</div>
+                                        <div class="status">Booked</div>
+                                    </div>
+                                    <div class="time-slot" data-time="14:30">
+                                        <div class="time">2:30 PM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot" data-time="15:00">
+                                        <div class="time">3:00 PM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot" data-time="15:30">
+                                        <div class="time">3:30 PM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot" data-time="16:00">
+                                        <div class="time">4:00 PM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                    <div class="time-slot" data-time="16:30">
+                                        <div class="time">4:30 PM</div>
+                                        <div class="status">Available</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Patient Details -->
+                        <div class="form-section" id="step3">
+                            <h3><i class="bi bi-person"></i> Patient Information</h3>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-control" id="firstName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-control" id="lastName" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" id="phone" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Date of Birth *</label>
+                                    <input type="date" class="form-control" id="dob" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Gender *</label>
+                                    <select class="form-select" id="gender" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Reason for Visit *</label>
+                                <textarea class="form-control" id="reason" rows="3" required></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Symptoms (Select all that apply):</label>
+                                <div class="symptoms-tags">
+                                    <div class="symptom-tag">Fever</div>
+                                    <div class="symptom-tag">Headache</div>
+                                    <div class="symptom-tag">Cough</div>
+                                    <div class="symptom-tag">Fatigue</div>
+                                    <div class="symptom-tag">Nausea</div>
+                                    <div class="symptom-tag">Dizziness</div>
+                                    <div class="symptom-tag">Chest Pain</div>
+                                    <div class="symptom-tag">Shortness of Breath</div>
+                                    <div class="symptom-tag">Other</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Confirmation -->
+                        <div class="form-section" id="step4">
+                            <h3><i class="bi bi-check-circle"></i> Appointment Confirmation</h3>
+                            
+                            <div class="alert alert-info">
+                                <h5><i class="bi bi-info-circle"></i> Please review your appointment details:</h5>
+                                <div id="confirmationDetails">
+                                    <!-- Details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the terms and conditions and privacy policy
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="notifications">
+                                    <label class="form-check-label" for="notifications">
+                                        Send me appointment reminders via email and SMS
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-back" id="backBtn">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </button>
+                        <button type="submit" class="btn btn-submit" id="submitBtn">
+                            <i class="bi bi-check-circle"></i> Confirm Appointment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3>Appointment Booked Successfully!</h3>
+            <p>Your appointment has been confirmed. You will receive a confirmation email shortly.</p>
+            <button class="btn btn-primary" onclick="closeSuccessModal()">Done</button>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        let currentStep = 1;
+        let selectedDoctor = '';
+        let selectedDate = '';
+        let selectedTime = '';
+        let selectedSymptoms = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if doctor is pre-selected
+            const preSelectedDoctor = localStorage.getItem('selectedDoctor');
+            if (preSelectedDoctor) {
+                document.getElementById('doctorName').textContent = preSelectedDoctor;
+                document.getElementById('doctorSelect').value = preSelectedDoctor;
+                selectedDoctor = preSelectedDoctor;
+                localStorage.removeItem('selectedDoctor');
+            } else {
+                selectedDoctor = document.getElementById('doctorSelect').value;
+            }
+
+            // Set default date
+            const today = new Date().toISOString().split('T')[0];
+            selectedDate = today;
+        });
+
+        // Doctor selection
+        document.getElementById('doctorSelect').addEventListener('change', function() {
+            selectedDoctor = this.value;
+            document.getElementById('doctorName').textContent = selectedDoctor;
+        });
+
+        // Date selection
+        document.querySelectorAll('.date-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.date-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedDate = this.dataset.date;
+                updateTimeSlots();
+            });
+        });
+
+        // Time slot selection
+        document.querySelectorAll('.time-slot:not(.disabled)').forEach(slot => {
+            slot.addEventListener('click', function() {
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTime = this.dataset.time;
+            });
+        });
+
+        // Symptom selection
+        document.querySelectorAll('.symptom-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                updateSymptoms();
+            });
+        });
+
+        function updateSymptoms() {
+            selectedSymptoms = [];
+            document.querySelectorAll('.symptom-tag.selected').forEach(tag => {
+                selectedSymptoms.push(tag.textContent);
+            });
+        }
+
+        function updateTimeSlots() {
+            // In a real application, this would fetch available time slots for the selected date
+            console.log('Updating time slots for:', selectedDate);
+        }
+
+        // Form submission
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate all required fields
+            if (validateForm()) {
+                showSuccessModal();
+            }
+        });
+
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const dob = document.getElementById('dob').value;
+            const gender = document.getElementById('gender').value;
+            const reason = document.getElementById('reason').value;
+            const terms = document.getElementById('terms').checked;
+
+            if (!firstName || !lastName || !email || !phone || !dob || !gender || !reason || !terms) {
+                alert('Please fill in all required fields and accept the terms and conditions.');
+                return false;
+            }
+
+            if (!selectedTime) {
+                alert('Please select a time slot.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function showSuccessModal() {
+            // Update confirmation details
+            const confirmationDetails = document.getElementById('confirmationDetails');
+            confirmationDetails.innerHTML = `
+                <p><strong>Doctor:</strong> ${selectedDoctor}</p>
+                <p><strong>Date:</strong> ${formatDate(selectedDate)}</p>
+                <p><strong>Time:</strong> ${formatTime(selectedTime)}</p>
+                <p><strong>Patient:</strong> ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}</p>
+                <p><strong>Email:</strong> ${document.getElementById('email').value}</p>
+                <p><strong>Phone:</strong> ${document.getElementById('phone').value}</p>
+                <p><strong>Reason:</strong> ${document.getElementById('reason').value}</p>
+                ${selectedSymptoms.length > 0 ? `<p><strong>Symptoms:</strong> ${selectedSymptoms.join(', ')}</p>` : ''}
+            `;
+
+            // Show modal
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+            // Redirect to home page
+            window.location.href = 'index.html';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        // Back button functionality
+        document.getElementById('backBtn').addEventListener('click', function() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateProgressSteps();
+            }
+        });
+
+        function updateProgressSteps() {
+            // Update progress indicators
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index < currentStep - 1) {
+                    step.classList.add('completed');
+                } else if (index === currentStep - 1) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Show/hide form sections
+            document.querySelectorAll('.form-section').forEach((section, index) => {
+                section.style.display = index === currentStep - 1 ? 'block' : 'none';
+            });
+
+            // Update button text
+            const submitBtn = document.getElementById('submitBtn');
+            if (currentStep === 4) {
+                submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Confirm Appointment';
+            } else {
+                submitBtn.innerHTML = '<i class="bi bi-arrow-right"></i> Next';
+                submitBtn.type = 'button';
+                submitBtn.onclick = function() {
+                    if (validateCurrentStep()) {
+                        currentStep++;
+                        updateProgressSteps();
+                    }
+                };
+            }
+        }
+
+        function validateCurrentStep() {
+            switch(currentStep) {
+                case 1:
+                    return true; // Doctor is always selected
+                case 2:
+                    if (!selectedDate || !selectedTime) {
+                        alert('Please select both date and time.');
+                        return false;
+                    }
+                    return true;
+                case 3:
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName = document.getElementById('lastName').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    const dob = document.getElementById('dob').value;
+                    const gender = document.getElementById('gender').value;
+                    const reason = document.getElementById('reason').value;
+
+                    if (!firstName || !lastName || !email || !phone || !dob || !gender || !reason) {
+                        alert('Please fill in all required fields.');
+                        return false;
+                    }
+                    return true;
+                default:
+                    return true;
+            }
+        }
+
+        // Initialize progress steps
+        updateProgressSteps();
+    </script>
+</body>
+</html>

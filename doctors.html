@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors - DocConnect</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #0066cc;
+            --light-blue: #e6f2ff;
+            --dark-blue: #004499;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --border-color: #e0e0e0;
+            --success-green: #28a745;
+            --warning-orange: #ffc107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue) !important;
+            text-decoration: none;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-blue) !important;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Search and Filter Section */
+        .search-filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-left: 3rem;
+            border-radius: 25px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0,102,204,0.25);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .filter-section h5 {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .filter-option {
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .filter-option label:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Doctor Cards */
+        .doctor-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .doctor-image {
+            height: 200px;
+            background: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doctor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .available {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .busy {
+            background: var(--warning-orange);
+            color: white;
+        }
+
+        .doctor-info {
+            padding: 1.5rem;
+        }
+
+        .doctor-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-specialty {
+            color: var(--primary-blue);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-details {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .doctor-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #ffc107;
+            margin-right: 0.5rem;
+        }
+
+        .rating-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .doctor-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-book {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-book:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        .btn-view {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Pagination */
+        .pagination {
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .page-link {
+            color: var(--primary-blue);
+            border-color: var(--border-color);
+            margin: 0 0.25rem;
+            border-radius: 5px;
+        }
+
+        .page-link:hover {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .page-item.active .page-link {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .doctor-actions {
+                flex-direction: column;
+            }
+            
+            .filter-section {
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-hospital"></i> DocConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="doctors.html">Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="appointment.html">Book Appointment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-primary" style="border-radius: 25px; padding: 0.5rem 1.5rem;">Book Now</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Find Your Doctor</h1>
+            <p>Connect with qualified healthcare professionals in your area</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <!-- Search and Filters -->
+            <div class="col-lg-3">
+                <div class="search-filter-section">
+                    <div class="search-box mb-4">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search doctors...">
+                    </div>
+
+                    <div class="filter-section">
+                        <h5>Specialty</h5>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="cardiology"> Cardiology
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="dermatology"> Dermatology
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="pediatrics"> Pediatrics
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="orthopedics"> Orthopedics
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="neurology"> Neurology
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <h5>Availability</h5>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="available"> Available Today
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="tomorrow"> Available Tomorrow
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="weekend"> Weekend Available
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <h5>Rating</h5>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="5"> 5 Stars
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="4"> 4+ Stars
+                            </label>
+                        </div>
+                        <div class="filter-option">
+                            <label>
+                                <input type="checkbox" value="3"> 3+ Stars
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-100 mt-3" style="border-radius: 25px;">Apply Filters</button>
+                </div>
+            </div>
+
+            <!-- Doctor Listings -->
+            <div class="col-lg-9">
+                <div class="row" id="doctorList">
+                    <!-- Doctor Card 1 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="doctor-card">
+                            <div class="doctor-image">
+                                <img src="https://via.placeholder.com/400x300/0066cc/ffffff?text=Dr.+Sarah+Johnson" alt="Dr. Sarah Johnson">
+                                <span class="availability-badge available">Available Today</span>
+                            </div>
+                            <div class="doctor-info">
+                                <h3 class="doctor-name">Dr. Sarah Johnson</h3>
+                                <p class="doctor-specialty">Cardiologist</p>
+                                <p class="doctor-details">
+                                    <i class="bi bi-geo-alt"></i> Medical Center, Downtown<br>
+                                    <i class="bi bi-briefcase"></i> 15 years experience<br>
+                                    <i class="bi bi-currency-dollar"></i> $150 - $300
+                                </p>
+                                <div class="doctor-rating">
+                                    <span class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </span>
+                                    <span class="rating-text">4.8 (234 reviews)</span>
+                                </div>
+                                <div class="doctor-actions">
+                                    <button class="btn btn-book" onclick="bookAppointment('Dr. Sarah Johnson')">Book Now</button>
+                                    <button class="btn btn-view">View Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card 2 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="doctor-card">
+                            <div class="doctor-image">
+                                <img src="https://via.placeholder.com/400x300/0066cc/ffffff?text=Dr.+Michael+Chen" alt="Dr. Michael Chen">
+                                <span class="availability-badge available">Available Today</span>
+                            </div>
+                            <div class="doctor-info">
+                                <h3 class="doctor-name">Dr. Michael Chen</h3>
+                                <p class="doctor-specialty">Dermatologist</p>
+                                <p class="doctor-details">
+                                    <i class="bi bi-geo-alt"></i> Skin Care Clinic, Westside<br>
+                                    <i class="bi bi-briefcase"></i> 12 years experience<br>
+                                    <i class="bi bi-currency-dollar"></i> $120 - $250
+                                </p>
+                                <div class="doctor-rating">
+                                    <span class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </span>
+                                    <span class="rating-text">5.0 (189 reviews)</span>
+                                </div>
+                                <div class="doctor-actions">
+                                    <button class="btn btn-book" onclick="bookAppointment('Dr. Michael Chen')">Book Now</button>
+                                    <button class="btn btn-view">View Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card 3 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="doctor-card">
+                            <div class="doctor-image">
+                                <img src="https://via.placeholder.com/400x300/0066cc/ffffff?text=Dr.+Emily+Rodriguez" alt="Dr. Emily Rodriguez">
+                                <span class="availability-badge busy">Busy Today</span>
+                            </div>
+                            <div class="doctor-info">
+                                <h3 class="doctor-name">Dr. Emily Rodriguez</h3>
+                                <p class="doctor-specialty">Pediatrician</p>
+                                <p class="doctor-details">
+                                    <i class="bi bi-geo-alt"></i> Children's Hospital, Northside<br>
+                                    <i class="bi bi-briefcase"></i> 8 years experience<br>
+                                    <i class="bi bi-currency-dollar"></i> $100 - $200
+                                </p>
+                                <div class="doctor-rating">
+                                    <span class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                    </span>
+                                    <span class="rating-text">4.2 (156 reviews)</span>
+                                </div>
+                                <div class="doctor-actions">
+                                    <button class="btn btn-book" onclick="bookAppointment('Dr. Emily Rodriguez')">Book Now</button>
+                                    <button class="btn btn-view">View Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card 4 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="doctor-card">
+                            <div class="doctor-image">
+                                <img src="https://via.placeholder.com/400x300/0066cc/ffffff?text=Dr.+James+Wilson" alt="Dr. James Wilson">
+                                <span class="availability-badge available">Available Today</span>
+                            </div>
+                            <div class="doctor-info">
+                                <h3 class="doctor-name">Dr. James Wilson</h3>
+                                <p class="doctor-specialty">Orthopedic Surgeon</p>
+                                <p class="doctor-details">
+                                    <i class="bi bi-geo-alt"></i> Bone & Joint Center, Eastside<br>
+                                    <i class="bi bi-briefcase"></i> 20 years experience<br>
+                                    <i class="bi bi-currency-dollar"></i> $200 - $400
+                                </p>
+                                <div class="doctor-rating">
+                                    <span class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </span>
+                                    <span class="rating-text">4.7 (312 reviews)</span>
+                                </div>
+                                <div class="doctor-actions">
+                                    <button class="btn btn-book" onclick="bookAppointment('Dr. James Wilson')">Book Now</button>
+                                    <button class="btn btn-view">View Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card 5 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="doctor-card">
+                            <div class="doctor-image">
+                                <img src="https://via.placeholder.com/400x300/0066cc/ffffff?text=Dr.+Lisa+Anderson" alt="Dr. Lisa Anderson">
+                                <span class="availability-badge available">Available Tomorrow</span>
+                            </div>
+                            <div class="doctor-info">
+                                <h3 class="doctor-name">Dr. Lisa Anderson</h3>
+                                <p class="doctor-specialty">Neurologist</p>
+                                <p class="doctor-details">
+                                    <i class="bi bi-geo-alt"></i> Neuro Care Center, Central<br>
+                                    <i class="bi bi-briefcase"></i> 10 years experience<br>
+                                    <i class="bi bi-currency-dollar"></i> $180 - $350
+                                </p>
+                                <div class="doctor-rating">
+                                    <span class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                    </span>
+                                    <span class="rating-text">4.5 (198 reviews)</span>
+                                </div>
+                                <div class="doctor-actions">
+                                    <button class="btn btn-book" onclick="bookAppointment('Dr. Lisa Anderson')">Book Now</button>
+                                    <button class="btn btn-view">View Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card 6 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="doctor-card">
+                            <div class="doctor-image">
+                                <img src="https://via.placeholder.com/400x300/0066cc/ffffff?text=Dr.+Robert+Taylor" alt="Dr. Robert Taylor">
+                                <span class="availability-badge available">Available Today</span>
+                            </div>
+                            <div class="doctor-info">
+                                <h3 class="doctor-name">Dr. Robert Taylor</h3>
+                                <p class="doctor-specialty">General Physician</p>
+                                <p class="doctor-details">
+                                    <i class="bi bi-geo-alt"></i> Family Health Clinic, Southside<br>
+                                    <i class="bi bi-briefcase"></i> 25 years experience<br>
+                                    <i class="bi bi-currency-dollar"></i> $80 - $150
+                                </p>
+                                <div class="doctor-rating">
+                                    <span class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </span>
+                                    <span class="rating-text">4.9 (445 reviews)</span>
+                                </div>
+                                <div class="doctor-actions">
+                                    <button class="btn btn-book" onclick="bookAppointment('Dr. Robert Taylor')">Book Now</button>
+                                    <button class="btn btn-view">View Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Book appointment function
+        function bookAppointment(doctorName) {
+            // Store selected doctor in localStorage
+            localStorage.setItem('selectedDoctor', doctorName);
+            // Redirect to appointment page
+            window.location.href = 'appointment.html';
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const doctorCards = document.querySelectorAll('.doctor-card');
+            
+            doctorCards.forEach(card => {
+                const doctorName = card.querySelector('.doctor-name').textContent.toLowerCase();
+                const specialty = card.querySelector('.doctor-specialty').textContent.toLowerCase();
+                
+                if (doctorName.includes(searchTerm) || specialty.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter functionality
+        const filterCheckboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
+        filterCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                applyFilters();
+            });
+        });
+
+        function applyFilters() {
+            const selectedSpecialties = Array.from(document.querySelectorAll('.filter-section:nth-child(2) input:checked'))
+                .map(cb => cb.value);
+            const selectedAvailability = Array.from(document.querySelectorAll('.filter-section:nth-child(3) input:checked'))
+                .map(cb => cb.value);
+            const selectedRatings = Array.from(document.querySelectorAll('.filter-section:nth-child(4) input:checked'))
+                .map(cb => cb.value);
+
+            const doctorCards = document.querySelectorAll('.doctor-card');
+            
+            doctorCards.forEach(card => {
+                let showCard = true;
+                
+                // Specialty filter
+                if (selectedSpecialties.length > 0) {
+                    const specialty = card.querySelector('.doctor-specialty').textContent.toLowerCase();
+                    if (!selectedSpecialties.some(s => specialty.includes(s))) {
+                        showCard = false;
+                    }
+                }
+                
+                // Availability filter
+                if (selectedAvailability.length > 0) {
+                    const badge = card.querySelector('.availability-badge');
+                    const availability = badge ? badge.textContent.toLowerCase() : '';
+                    if (!selectedAvailability.some(a => availability.includes(a))) {
+                        showCard = false;
+                    }
+                }
+                
+                // Rating filter
+                if (selectedRatings.length > 0) {
+                    const ratingText = card.querySelector('.rating-text').textContent;
+                    const rating = parseFloat(ratingText.match(/[\d.]+/)[0]);
+                    
+                    if (selectedRatings.includes('5') && rating < 5) showCard = false;
+                    if (selectedRatings.includes('4') && rating < 4) showCard = false;
+                    if (selectedRatings.includes('3') && rating < 3) showCard = false;
+                }
+                
+                card.style.display = showCard ? 'block' : 'none';
+            });
+        }
+
+        // Apply filters button
+        document.querySelector('.btn-primary.w-100').addEventListener('click', applyFilters);
+
+        // Pagination functionality
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Remove active class from all pages
+                document.querySelectorAll('.page-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                // Add active class to clicked page
+                this.parentElement.classList.add('active');
+                
+                // In a real application, this would load different data
+                console.log('Loading page:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
