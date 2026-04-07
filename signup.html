@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - DocConnect</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #0066cc;
+            --primary-light: #0088ff;
+            --light-blue: #e6f2ff;
+            --dark-blue: #004499;
+            --text-dark: #1a1a2e;
+            --text-light: #666666;
+            --border-color: #e0e0e0;
+            --success-green: #28a745;
+            --danger-red: #dc3545;
+            --warning-orange: #ff9800;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: linear-gradient(135deg, var(--light-blue) 0%, white 50%, var(--light-blue) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--light-blue);
+            border-top-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255,255,255,0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-blue) !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--primary-blue) !important;
+            background: var(--light-blue);
+        }
+
+        .btn-book-nav {
+            background: var(--gradient-primary);
+            color: white !important;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-book-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white !important;
+        }
+
+        /* Sign Up Container */
+        .signup-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        .signup-card {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        /* Left Side - Sign Up Form */
+        .signup-form-side {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .signup-header h2 {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Form Styles */
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            height: auto;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0,102,204,0.1);
+        }
+
+        .form-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check {
+            margin-bottom: 0;
+        }
+
+        .form-check-input {
+            border-color: var(--border-color);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .forgot-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--dark-blue);
+            text-decoration: underline;
+        }
+
+        .btn-signup {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+        /* Error/Success Messages */
+        .error-message,
+        .success-message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: var(--danger-red);
+            padding: 0.875rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 2px solid var(--danger-red);
+            display: none;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.875rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 2px solid var(--primary-blue);
+            display: none;
+            font-weight: 500;
+        }
+
+        .error-message i,
+        .success-message i {
+            margin-right: 0.5rem;
+        }
+
+        /* User Type Tabs */
+        .user-type-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--light-blue);
+            padding: 0.25rem;
+            border-radius: 10px;
+        }
+
+        .user-type-tab {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-type-tab.active {
+            background: white;
+            color: var(--primary-blue);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .user-type-tab i {
+            margin-right: 0.5rem;
+        }
+
+        /* Social Login */
+        .social-login {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-social {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-social:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+
+        .btn-google {
+            color: #ea4335;
+        }
+
+        .btn-facebook {
+            color: #1877f2;
+        }
+
+        .btn-apple {
+            color: #000;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-light);
+        }
+
+        .login-link a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: var(--dark-blue);
+            text-decoration: underline;
+        }
+
+        /* Right Side - Hero Content */
+        .signup-hero-side {
+            flex: 1;
+            background: var(--gradient-dark);
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-hero-side::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-30px, -30px) rotate(180deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .feature-list li i {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            height: 5px;
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            background: var(--border-color);
+            overflow: hidden;
+            display: none;
+        }
+
+        .password-strength.show {
+            display: block;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .strength-weak { background: var(--danger-red); width: 33%; }
+        .strength-medium { background: var(--warning-orange); width: 66%; }
+        .strength-strong { background: var(--success-green); width: 100%; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-blue);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .signup-card {
+                flex-direction: column;
+                max-width: 400px;
+                margin: 0 1rem;
+            }
+
+            .signup-form-side {
+                padding: 2rem;
+            }
+
+            .signup-hero-side {
+                padding: 2rem;
+                min-height: 300px;
+            }
+
+            .hero-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .social-buttons {
+                flex-direction: column;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-hospital"></i> DocConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="doctors.html">Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="appointment.html">Book Appointment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'">
+                            <i class="bi bi-calendar-check"></i> Book Now
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sign Up Container -->
+    <div class="signup-container">
+        <div class="signup-card" data-aos="fade-up" data-aos-duration="800">
+            <!-- Left Side - Sign Up Form -->
+            <div class="signup-form-side" data-aos="fade-right" data-aos-delay="200">
+                <div class="signup-header">
+                    <h2>Create Account</h2>
+                    <p>Join DocConnect and start your healthcare journey</p>
+                </div>
+
+                <!-- Error/Success Messages -->
+                <div class="error-message" id="errorMessage">
+                    <i class="bi bi-exclamation-circle"></i> <span id="errorText">Registration failed. Please try again.</span>
+                </div>
+                <div class="success-message" id="successMessage">
+                    <i class="bi bi-check-circle"></i> <span id="successText">Registration successful! Redirecting to login...</span>
+                </div>
+
+                <!-- User Type Tabs -->
+                <div class="user-type-tabs">
+                    <button class="user-type-tab active" data-type="patient">
+                        <i class="bi bi-person"></i> Patient
+                    </button>
+                    <button class="user-type-tab" data-type="doctor">
+                        <i class="bi bi-hospital"></i> Doctor
+                    </button>
+                </div>
+
+                <!-- Sign Up Form -->
+                <form id="signupForm">
+                    <!-- Patient Fields -->
+                    <div id="patientFields">
+                        <div class="form-floating">
+                            <input type="date" class="form-control" id="dateOfBirth" placeholder="Date of Birth">
+                            <label for="dateOfBirth">Date of Birth</label>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Fields (Hidden by default) -->
+                    <div id="doctorFields" style="display: none;">
+                        <div class="form-floating">
+                            <select class="form-control" id="specialization">
+                                <option value="">Select Specialization</option>
+                                <option value="general-practice">General Practice</option>
+                                <option value="cardiology">Cardiology</option>
+                                <option value="dermatology">Dermatology</option>
+                                <option value="pediatrics">Pediatrics</option>
+                                <option value="orthopedics">Orthopedics</option>
+                                <option value="gynecology">Gynecology</option>
+                                <option value="neurology">Neurology</option>
+                                <option value="psychiatry">Psychiatry</option>
+                                <option value="oncology">Oncology</option>
+                                <option value="surgery">General Surgery</option>
+                            </select>
+                            <label for="specialization">Specialization</label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="medicalLicense" placeholder="Medical License Number">
+                            <label for="medicalLicense">Medical License Number</label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="hospital" placeholder="Hospital/Clinic Name">
+                            <label for="hospital">Hospital/Clinic Affiliation</label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="experience" placeholder="Years of Experience" min="0" max="50">
+                            <label for="experience">Years of Experience</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                                <label for="firstName">First Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                                <label for="lastName">Last Name</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                        <label for="email">Email Address</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="tel" class="form-control" id="phone" placeholder="Phone Number" required>
+                        <label for="phone">Phone Number</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="password" placeholder="Password" required>
+                        <label for="password">Password</label>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                        <label for="confirmPassword">Confirm Password</label>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the Terms & Conditions
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-signup" id="signupBtn">
+                        <i class="bi bi-person-plus"></i> Create Account
+                    </button>
+                </form>
+
+                <!-- Social Login -->
+                <div class="social-login">
+                    <p>Or sign up with</p>
+                    <div class="social-buttons">
+                        <button class="btn btn-social btn-google">
+                            <i class="bi bi-google"></i> Google
+                        </button>
+                        <button class="btn btn-social btn-facebook">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </button>
+                        <button class="btn btn-social btn-apple">
+                            <i class="bi bi-apple"></i> Apple
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Login Link -->
+                <div class="login-link">
+                    Already have an account? <a href="login.html">Sign in</a>
+                </div>
+            </div>
+
+            <!-- Right Side - Hero Content -->
+            <div class="signup-hero-side" data-aos="fade-left" data-aos-delay="400">
+                <div class="hero-content">
+                    <h3>Start Your Healthcare Journey Today</h3>
+                    <p>Join thousands of patients and doctors who trust DocConnect for seamless healthcare management.</p>
+                    
+                    <ul class="feature-list">
+                        <li>
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Book appointments instantly</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Connect with qualified doctors</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Manage your health records</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Receive automated reminders</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Secure telemedicine consultations</span>
+                        </li>
+                    </ul>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">10,000+</span>
+                            <span class="stat-label">Happy Patients</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Expert Doctors</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50,000+</span>
+                            <span class="stat-label">Appointments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 500);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // User Type Tab Switching
+        const userTypeTabs = document.querySelectorAll('.user-type-tab');
+        const signupForm = document.getElementById('signupForm');
+        const patientFields = document.getElementById('patientFields');
+        const doctorFields = document.getElementById('doctorFields');
+
+        userTypeTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                userTypeTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const userType = this.dataset.type;
+                
+                // Show/hide fields based on user type
+                if (userType === 'doctor') {
+                    patientFields.style.display = 'none';
+                    doctorFields.style.display = 'block';
+                    // Make doctor fields required
+                    document.getElementById('specialization').required = true;
+                    document.getElementById('medicalLicense').required = true;
+                    document.getElementById('hospital').required = true;
+                    document.getElementById('experience').required = true;
+                    document.getElementById('dateOfBirth').required = false;
+                } else {
+                    patientFields.style.display = 'block';
+                    doctorFields.style.display = 'none';
+                    // Make patient field required
+                    document.getElementById('dateOfBirth').required = true;
+                    // Make doctor fields not required
+                    document.getElementById('specialization').required = false;
+                    document.getElementById('medicalLicense').required = false;
+                    document.getElementById('hospital').required = false;
+                    document.getElementById('experience').required = false;
+                }
+                
+                console.log('Selected user type:', userType);
+            });
+        });
+
+        // Password Strength Indicator
+        const passwordInput = document.getElementById('password');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            
+            if (password.length === 0) {
+                passwordStrength.classList.remove('show');
+                return;
+            }
+            
+            passwordStrength.classList.add('show');
+            
+            let strength = 0;
+            
+            // Check password strength
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            // Update strength bar
+            passwordStrengthBar.className = 'password-strength-bar';
+            
+            if (strength <= 1) {
+                passwordStrengthBar.classList.add('strength-weak');
+            } else if (strength === 2) {
+                passwordStrengthBar.classList.add('strength-medium');
+            } else {
+                passwordStrengthBar.classList.add('strength-strong');
+            }
+        });
+
+        // Form Validation and Submission
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Hide any existing messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Get active user type
+            const activeTab = document.querySelector('.user-type-tab.active');
+            const userType = activeTab.dataset.type;
+            
+            // Get form values
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            
+            // Basic validation
+            if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+                showError('Please fill in all required fields.');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Passwords do not match.');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showError('Password must be at least 8 characters long.');
+                return;
+            }
+            
+            if (!agreeTerms) {
+                showError('You must agree to the Terms & Conditions.');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address.');
+                return;
+            }
+            
+            // Phone validation (basic)
+            const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+            if (!phoneRegex.test(phone) || phone.length < 10) {
+                showError('Please enter a valid phone number.');
+                return;
+            }
+            
+            // User type specific validation
+            if (userType === 'doctor') {
+                const specialization = document.getElementById('specialization').value;
+                const medicalLicense = document.getElementById('medicalLicense').value;
+                const hospital = document.getElementById('hospital').value;
+                const experience = document.getElementById('experience').value;
+                
+                if (!specialization) {
+                    showError('Please select your specialization.');
+                    return;
+                }
+                
+                if (!medicalLicense) {
+                    showError('Please enter your medical license number.');
+                    return;
+                }
+                
+                if (!hospital) {
+                    showError('Please enter your hospital or clinic affiliation.');
+                    return;
+                }
+                
+                if (!experience || experience < 0 || experience > 50) {
+                    showError('Please enter valid years of experience (0-50).');
+                    return;
+                }
+            } else {
+                const dateOfBirth = document.getElementById('dateOfBirth').value;
+                
+                if (!dateOfBirth) {
+                    showError('Please enter your date of birth.');
+                    return;
+                }
+                
+                // Validate age (must be at least 18 years old)
+                const dob = new Date(dateOfBirth);
+                const today = new Date();
+                const age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+                
+                if (age < 18) {
+                    showError('You must be at least 18 years old to register.');
+                    return;
+                }
+                
+                if (age > 120) {
+                    showError('Please enter a valid date of birth.');
+                    return;
+                }
+            }
+            
+            // Simulate successful registration
+            const signupBtn = document.getElementById('signupBtn');
+            const originalText = signupBtn.innerHTML;
+            signupBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating Account...';
+            signupBtn.disabled = true;
+            
+            setTimeout(() => {
+                showSuccess(`Registration successful! Welcome to DocConnect as a ${userType}. Redirecting to login...`);
+                
+                // Reset form
+                signupForm.reset();
+                passwordStrength.classList.remove('show');
+                
+                // Redirect to login after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                
+                // Reset button
+                signupBtn.innerHTML = originalText;
+                signupBtn.disabled = false;
+            }, 1500);
+        });
+
+        // Social Login Buttons
+        document.querySelectorAll('.btn-social').forEach(button => {
+            button.addEventListener('click', function() {
+                const provider = this.classList.contains('btn-google') ? 'Google' :
+                               this.classList.contains('btn-facebook') ? 'Facebook' : 'Apple';
+                
+                showError(`${provider} sign up is not available yet. Please use the email form.`);
+            });
+        });
+
+        // Helper functions
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorElement.style.display = 'flex';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            successText.textContent = message;
+            successElement.style.display = 'flex';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                successElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Real-time validation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword && password !== confirmPassword) {
+                this.style.borderColor = 'var(--danger-red)';
+            } else if (confirmPassword && password === confirmPassword) {
+                this.style.borderColor = 'var(--success-green)';
+            } else {
+                this.style.borderColor = 'var(--border-color)';
+            }
+        });
+    </script>
+</body>
+</html>
