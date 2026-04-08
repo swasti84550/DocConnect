@@ -11,20 +11,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-blue: #0066cc;
-            --light-blue: #e6f2ff;
-            --dark-blue: #004499;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --border-color: #e0e0e0;
-            --success-green: #28a745;
-            --warning-orange: #ffc107;
-            --danger-red: #dc3545;
-            --sidebar-bg: #2c3e50;
-            --sidebar-hover: #34495e;
+                :root {
+            --primary-blue: #4f46e5;
+            --primary-light: #818cf8;
+            --light-blue: #e0e7ff;
+            --dark-blue: #1e1b4b;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
+            --gradient-dark: linear-gradient(135deg, var(--dark-blue), var(--primary-blue));
+            --gradient-mesh: radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.4) 0px, transparent 50%), 
+                             radial-gradient(at 100% 0%, rgba(129, 140, 248, 0.4) 0px, transparent 50%), 
+                             radial-gradient(at 100% 100%, rgba(30, 27, 75, 0.4) 0px, transparent 50%);
+            --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.3);
+            --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -33,11 +46,46 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
+                body {
+            font-family: 'Inter', system-ui, sans-serif;
             color: var(--text-dark);
             line-height: 1.6;
-            background: #f8f9fa;
+            background: #f8fafc;
+            overflow-x: hidden;
+            letter-spacing: -0.015em;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--light-blue);
+            border-top-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Dashboard Layout */
@@ -55,19 +103,24 @@
             height: 100vh;
             overflow-y: auto;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: all 0.4s var(--animation-timing);
+            box-shadow: var(--shadow-lg);
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
 
         .sidebar-header {
             padding: 2rem 1.5rem;
-            background: rgba(0,0,0,0.2);
+            background: var(--gradient-dark);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .sidebar-header h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .sidebar-header p {
@@ -79,20 +132,23 @@
         .user-profile {
             display: flex;
             align-items: center;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .user-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-right: 1rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .user-info h4 {
@@ -108,27 +164,33 @@
         }
 
         .sidebar-menu {
-            padding: 1.5rem 0;
+            padding: 1rem 0;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
             padding: 1rem 1.5rem;
-            color: white;
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
             transition: all 0.3s ease;
             border-left: 3px solid transparent;
+            margin: 0.25rem 0.75rem;
+            border-radius: 0 10px 10px 0;
         }
 
         .menu-item:hover {
             background: var(--sidebar-hover);
+            color: white;
             border-left-color: var(--primary-blue);
         }
 
         .menu-item.active {
             background: var(--sidebar-hover);
+            color: white;
             border-left-color: var(--primary-blue);
+            box-shadow: inset 3px 0 0 var(--primary-blue);
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.15) 0%, transparent 100%);
         }
 
         .menu-item i {
@@ -269,24 +331,57 @@
             padding: 2rem;
         }
 
-        .welcome-section {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            /* Welcome Section */
+            .welcome-section {
+            background: var(--dark-blue);
+            background-image: var(--gradient-mesh);
             color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s var(--animation-timing);
         }
+        
+        .welcome-section:hover {
+            transform: translateY(-2px);
+        }
+        
 
-        .welcome-section h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+            .welcome-section::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                animation: float 20s ease-in-out infinite;
+            }
 
-        .welcome-section p {
-            opacity: 0.9;
-            margin-bottom: 0;
-        }
+            @keyframes float {
+                0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                50% { transform: translate(-30px, -30px) rotate(180deg); }
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                position: relative;
+                z-index: 1;
+            }
+
+            .welcome-section p {
+                opacity: 0.9;
+                margin-bottom: 0;
+                position: relative;
+                z-index: 1;
+            }
 
         /* Stats Cards */
         .stats-grid {
@@ -297,22 +392,40 @@
         }
 
         .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 1.75rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s var(--animation-timing);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.4s var(--animation-timing);
+        }
+        
+        .stat-card:hover::after {
+            opacity: 1;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl), var(--shadow-glow);
+            border-color: var(--primary-light);
         }
 
         .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -341,8 +454,8 @@
         }
 
         .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 0.25rem;
         }
@@ -354,8 +467,9 @@
         }
 
         .stat-change {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin-top: 0.5rem;
+            font-weight: 500;
         }
 
         .stat-change.positive {
@@ -517,20 +631,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 1.5rem;
-            background: var(--light-blue);
-            border: 2px solid transparent;
-            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
             text-decoration: none;
             color: var(--primary-blue);
-            transition: all 0.3s ease;
+            transition: all 0.3s var(--animation-timing);
+            box-shadow: var(--shadow-sm);
         }
 
         .quick-action-btn:hover {
-            background: white;
+            background: var(--primary-blue);
+            color: white;
             border-color: var(--primary-blue);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,102,204,0.2);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md), var(--shadow-glow);
+        }
+        
+        .quick-action-btn:hover i {
+            transform: scale(1.1) translateY(-2px);
+        }
+        
+        .quick-action-btn i {
+            transition: transform 0.3s var(--animation-timing);
         }
 
         .quick-action-btn i {
@@ -541,6 +665,24 @@
         .quick-action-btn span {
             font-weight: 600;
             text-align: center;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-blue);
         }
 
         /* Mobile Menu Toggle */
@@ -617,14 +759,70 @@
         .overlay.active {
             display: block;
         }
+    
+        /* Micro Animations */
+        @keyframes pulse-soft {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .notification-badge {
+            animation: pulse-soft 2s infinite;
+        }
+        
+        .section-card {
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .section-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .appointment-item {
+            border-radius: 16px;
+            padding: 1.25rem;
+            background: white;
+        }
+        
+        .appointment-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+            background: white;
+        }
+        
+        .btn {
+            transition: all 0.2s var(--animation-timing);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .top-nav {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--border-color);
+        }
+    
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h3>DocConnect</h3>
+                <h3><i class="bi bi-hospital"></i> DocConnect</h3>
                 <p>Doctor Portal</p>
                 <div class="user-profile">
                     <div class="user-avatar">SJ</div>
@@ -636,45 +834,33 @@
             </div>
 
             <nav class="sidebar-menu">
-                <a href="#" class="menu-item active">
+                <a href="#" class="menu-item active" onclick="switchTab('dashboard')">
                     <i class="bi bi-speedometer2"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" onclick="switchTab('appointments')">
                     <i class="bi bi-calendar-check"></i>
                     <span>Appointments</span>
-                    <span class="menu-badge">8</span>
+                    <span class="menu-badge" id="sidebarAptCount">0</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" onclick="switchTab('patients')">
                     <i class="bi bi-people"></i>
                     <span>Patients</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-file-medical"></i>
-                    <span>Medical Records</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-capsule"></i>
-                    <span>Prescriptions</span>
-                </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" onclick="switchTab('schedule')">
                     <i class="bi bi-calendar-month"></i>
                     <span>Schedule</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-graph-up"></i>
-                    <span>Analytics</span>
-                </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" onclick="switchTab('messages')">
                     <i class="bi bi-chat-dots"></i>
                     <span>Messages</span>
                     <span class="menu-badge">3</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" onclick="switchTab('settings')">
                     <i class="bi bi-gear"></i>
                     <span>Settings</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" onclick="logoutUser(event)">
                     <i class="bi bi-box-arrow-right"></i>
                     <span>Logout</span>
                 </a>
@@ -695,67 +881,82 @@
                     </div>
                 </div>
 
-                <div class="nav-actions">
-                    <button class="notification-btn">
-                        <i class="bi bi-bell"></i>
-                        <span class="notification-badge">5</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small">SJ</div>
-                        <span>Dr. Sarah Johnson</span>
-                        <i class="bi bi-chevron-down"></i>
+                <div class="nav-actions d-flex align-items-center">
+                    <div class="dropdown">
+                        <button class="notification-btn border-0 bg-transparent position-relative" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bell fs-5"></i>
+                            <span class="notification-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">0</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 p-2" style="min-width: 250px;">
+                            <li><h6 class="dropdown-header fw-bold">Notifications</h6></li>
+                            <li><a class="dropdown-item text-muted" href="#">No new notifications</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dropdown ms-3">
+                        <div class="user-menu d-flex align-items-center bg-white p-2 rounded-pill shadow-sm" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                            <div class="user-avatar-small bg-primary text-white d-flex justify-content-center align-items-center fw-bold" style="width: 32px; height: 32px; border-radius: 50%;">Dr</div>
+                            <span class="ms-2 fw-semibold text-dark">Doctor</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                            <li><a class="dropdown-item" href="#" onclick="switchTab('settings')"><i class="bi bi-person me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="switchTab('settings')"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logoutUser(event)"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
                     </div>
                 </div>
             </nav>
 
-            <!-- Dashboard Content -->
-            <div class="dashboard-content">
+            <!-- Dashboard SPA Wrappers -->
+            <div id="dashboardView" class="tab-view active">
                 <!-- Welcome Section -->
-                <div class="welcome-section">
-                    <h1>Welcome back, Dr. Sarah!</h1>
-                    <p>You have 8 appointments scheduled for today</p>
+                <div class="welcome-section" data-aos="fade-up">
+                    <h1>Good Morning, Doctor!</h1>
+                    <p>You have 0 appointments scheduled for today</p>
                 </div>
 
                 <!-- Stats Cards -->
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="stat-icon patients">
                             <i class="bi bi-people"></i>
                         </div>
-                        <div class="stat-value">1,247</div>
+                        <div class="stat-value">248</div>
                         <div class="stat-label">Total Patients</div>
                         <div class="stat-change positive">
-                            <i class="bi bi-arrow-up"></i> 23 new this month
+                            <i class="bi bi-arrow-up"></i> 12 this week
                         </div>
                     </div>
 
-                    <div class="stat-card">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="stat-icon appointments">
                             <i class="bi bi-calendar-check"></i>
                         </div>
-                        <div class="stat-value">8</div>
+                        <div class="stat-value">5</div>
                         <div class="stat-label">Today's Appointments</div>
                         <div class="stat-change positive">
-                            <i class="bi bi-arrow-up"></i> 2 completed
+                            <i class="bi bi-arrow-up"></i> 2 new
                         </div>
                     </div>
 
-                    <div class="stat-card">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
                         <div class="stat-icon revenue">
-                            <i class="bi bi-currency-dollar"></i>
+                            <i class="bi bi-currency-rupee"></i>
                         </div>
-                        <div class="stat-value">$12,450</div>
+                        <div class="stat-value">₹12.5K</div>
                         <div class="stat-label">Monthly Revenue</div>
                         <div class="stat-change positive">
-                            <i class="bi bi-arrow-up"></i> 15% increase
+                            <i class="bi bi-arrow-up"></i> 8% increase
                         </div>
                     </div>
 
-                    <div class="stat-card">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
                         <div class="stat-icon rating">
-                            <i class="bi bi-star"></i>
+                            <i class="bi bi-star-fill"></i>
                         </div>
-                        <div class="stat-value">4.8</div>
+                        <div class="stat-value">4.9</div>
                         <div class="stat-label">Patient Rating</div>
                         <div class="stat-change positive">
                             <i class="bi bi-arrow-up"></i> 0.2 this month
@@ -764,111 +965,191 @@
                 </div>
 
                 <!-- Today's Appointments -->
-                <div class="section-card">
+                <div class="section-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="section-header">
                         <h2>Today's Appointments</h2>
                         <button class="btn-view-all">View All</button>
                     </div>
-                    <div class="appointment-list">
-                        <div class="appointment-item">
-                            <div class="appointment-time">
-                                <div class="time">9:00 AM</div>
-                                <div class="date">Today</div>
+                    <div class="appointment-list" id="appointmentsContainer">
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading appointments...</span>
                             </div>
-                            <div class="patient-info">
-                                <h4>John Doe</h4>
-                                <p><i class="bi bi-person"></i> Age: 45 | Male</p>
-                                <p><i class="bi bi-heart-pulse"></i> Routine Check-up</p>
-                                <p><i class="bi bi-telephone"></i> +1 (234) 567-8900</p>
-                            </div>
-                            <span class="appointment-status status-confirmed">Confirmed</span>
-                            <div class="appointment-actions">
-                                <button class="btn-action" title="View Profile">
-                                    <i class="bi bi-person"></i>
-                                </button>
-                                <button class="btn-action" title="Medical Records">
-                                    <i class="bi bi-file-medical"></i>
-                                </button>
-                                <button class="btn-action" title="Start Consultation">
-                                    <i class="bi bi-camera-video"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="appointment-item">
-                            <div class="appointment-time">
-                                <div class="time">10:30 AM</div>
-                                <div class="date">Today</div>
-                            </div>
-                            <div class="patient-info">
-                                <h4>Emily Rodriguez</h4>
-                                <p><i class="bi bi-person"></i> Age: 32 | Female</p>
-                                <p><i class="bi bi-heart-pulse"></i> Follow-up Consultation</p>
-                                <p><i class="bi bi-telephone"></i> +1 (234) 567-8901</p>
-                            </div>
-                            <span class="appointment-status status-confirmed">Confirmed</span>
-                            <div class="appointment-actions">
-                                <button class="btn-action" title="View Profile">
-                                    <i class="bi bi-person"></i>
-                                </button>
-                                <button class="btn-action" title="Medical Records">
-                                    <i class="bi bi-file-medical"></i>
-                                </button>
-                                <button class="btn-action" title="Start Consultation">
-                                    <i class="bi bi-camera-video"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="appointment-item">
-                            <div class="appointment-time">
-                                <div class="time">2:00 PM</div>
-                                <div class="date">Today</div>
-                            </div>
-                            <div class="patient-info">
-                                <h4>Michael Chen</h4>
-                                <p><i class="bi bi-person"></i> Age: 58 | Male</p>
-                                <p><i class="bi bi-heart-pulse"></i> Cardiac Evaluation</p>
-                                <p><i class="bi bi-telephone"></i> +1 (234) 567-8902</p>
-                            </div>
-                            <span class="appointment-status status-completed">Completed</span>
-                            <div class="appointment-actions">
-                                <button class="btn-action" title="View Profile">
-                                    <i class="bi bi-person"></i>
-                                </button>
-                                <button class="btn-action" title="Medical Records">
-                                    <i class="bi bi-file-medical"></i>
-                                </button>
-                                <button class="btn-action" title="Prescription">
-                                    <i class="bi bi-capsule"></i>
-                                </button>
-                            </div>
+                            <p class="mt-2 text-muted">Loading your schedule...</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="section-card">
+                <div class="section-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="section-header">
                         <h2>Quick Actions</h2>
                     </div>
                     <div class="quick-actions">
-                        <a href="#" class="quick-action-btn">
-                            <i class="bi bi-person-plus"></i>
-                            <span>Add Patient</span>
-                        </a>
-                        <a href="#" class="quick-action-btn">
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="400">
                             <i class="bi bi-calendar-plus"></i>
                             <span>Schedule Appointment</span>
                         </a>
-                        <a href="#" class="quick-action-btn">
-                            <i class="bi bi-file-earmark-plus"></i>
-                            <span>New Prescription</span>
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="500">
+                            <i class="bi bi-person-plus"></i>
+                            <span>Add Patient</span>
                         </a>
-                        <a href="#" class="quick-action-btn">
-                            <i class="bi bi-camera-video"></i>
-                            <span>Start Consultation</span>
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="600">
+                            <i class="bi bi-file-earmark-medical"></i>
+                            <span>View Records</span>
                         </a>
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="700">
+                            <i class="bi bi-chat-dots"></i>
+                            <span>Messages</span>
+                        </a>
+                    </div>
+                </div> <!-- End Quick Actions -->
+            </div> <!-- End Dashboard View -->
+
+            <!-- Settings View -->
+            <div id="settingsView" class="tab-view" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Doctor Profile Settings</h2>
+                    </div>
+                    <form id="settingsForm" class="mt-4">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-bold">First Name</label>
+                                <input type="text" id="settingsFirstName" class="form-control form-control-lg bg-light" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-bold">Last Name</label>
+                                <input type="text" id="settingsLastName" class="form-control form-control-lg bg-light" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-bold">Specialization</label>
+                                <input type="text" id="settingsSpecialization" class="form-control form-control-lg bg-light" placeholder="e.g. Cardiologist">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label text-muted fw-bold">Years Experience</label>
+                                <input type="number" id="settingsExperience" class="form-control form-control-lg bg-light" placeholder="10">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label text-muted fw-bold">Consultation Fee (₹)</label>
+                                <input type="number" id="settingsFee" class="form-control form-control-lg bg-light" placeholder="150.00">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-bold">Clinic/Hospital Name</label>
+                                <input type="text" id="settingsClinic" class="form-control form-control-lg bg-light" placeholder="e.g. City Care Hospital">
+                            </div>
+                            <div class="col-md-12 mt-4">
+                                <label class="form-label text-muted fw-bold">About Section (Professional Bio)</label>
+                                <textarea id="settingsAbout" class="form-control bg-light" rows="4" maxlength="1000" placeholder="e.g. Experienced cardiologist with 5+ years in heart care..."></textarea>
+                                <small class="text-muted">Max 1000 characters. Plain text only.</small>
+                            </div>
+                            <div class="col-12 mt-5">
+                                <button type="submit" class="btn btn-primary btn-lg px-5 shadow"><i class="bi bi-save me-2"></i> Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="section-card p-4 mt-4 border-danger border border-2">
+                    <h5 class="text-danger mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i>Danger Zone</h5>
+                    <p class="text-muted">Deleting your doctor account is permanent. All your data, schedule availability, appointments, and messages will be wiped immediately and cannot be recovered.</p>
+                    <button class="btn btn-outline-danger" type="button" onclick="deleteAccount()">Delete Account</button>
+                </div>
+            </div>
+
+            <!-- Placeholder View -->
+            <div id="placeholderView" class="tab-view" style="display: none;">
+                <div class="section-card text-center" style="padding: 100px 20px;">
+                    <i class="bi bi-tools text-primary" style="font-size: 4rem;"></i>
+                    <h2 class="mt-4" id="placeholderTitle">Under Construction</h2>
+                    <p class="text-muted mt-2">This module is currently being finalized. Please check back after the next update!</p>
+                    <button class="btn btn-primary mt-4" onclick="switchTab('dashboard')">Return to Dashboard</button>
+                </div>
+            </div> <!-- End Placeholder View -->
+
+            <!-- Appointments View -->
+            <div id="appointmentsView" class="tab-view" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <h2>All Appointments</h2>
+                        <div class="d-flex gap-2">
+                            <select id="aptFilterStatus" class="form-select form-select-sm" style="width: auto;">
+                                <option value="">All Statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="appointment-list mt-3" id="allAppointmentsContainer">
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2 text-muted">Loading all appointments...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients View -->
+            <div id="patientsView" class="tab-view" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Your Patients</h2>
+                    </div>
+                    <div class="mt-3" id="patientsContainer">
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2 text-muted">Loading patients...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule View -->
+            <div id="scheduleView" class="tab-view" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <h2>Weekly Schedule</h2>
+                        <button class="btn btn-primary btn-sm" onclick="saveSchedule()"><i class="bi bi-save me-1"></i>Save All</button>
+                    </div>
+                    <div class="p-4" id="scheduleBlocks">
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2 text-muted">Loading availability...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages View -->
+            <div id="messagesView" class="tab-view" style="display: none;">
+                <div class="section-card">
+                    <div class="row g-0" style="min-height: 500px;">
+                        <!-- Contacts List -->
+                        <div class="col-md-4 border-end">
+                            <div class="p-3 border-bottom bg-light">
+                                <h5 class="mb-0 fw-bold"><i class="bi bi-chat-dots me-2"></i>Messages</h5>
+                            </div>
+                            <div id="messageContactsList" class="overflow-auto bg-white" style="height: 450px;">
+                                <div class="p-4 text-center text-muted">Loading contacts...</div>
+                            </div>
+                        </div>
+                        <!-- Chat Area -->
+                        <div class="col-md-8 d-flex flex-column h-100">
+                            <div class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
+                                <div id="activeChatName" class="fw-bold fs-5">Select a conversation</div>
+                                <span class="badge bg-primary rounded-pill d-none" id="activeChatStatus">Active</span>
+                            </div>
+                            <div id="chatHistory" class="p-3 overflow-auto flex-grow-1" style="height: 380px; background: #f8f9fa;">
+                                <div class="text-center text-muted mt-5">Select a conversation to start messaging</div>
+                            </div>
+                            <div class="p-3 border-top bg-white">
+                                <div class="input-group">
+                                    <input type="text" id="messageInput" class="form-control" placeholder="Type a message..." disabled>
+                                    <button class="btn btn-primary" id="sendMessageBtn" onclick="sendMessage()" disabled><i class="bi bi-send-fill me-1"></i> Send</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -880,9 +1161,32 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- API Helper Functions -->
+    <script src="js/api.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
+        // ── Auth Guard ───────────────────────────────────────────────────────
+        requireAuth(); // Redirects to login.html if not logged in
+
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 500);
+        });
+
         // Mobile menu toggle
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const sidebar = document.getElementById('sidebar');
@@ -929,15 +1233,303 @@
             });
         });
 
-        // Notification button
-        document.querySelector('.notification-btn').addEventListener('click', function() {
-            alert('You have 5 new notifications:\n\n1. New patient appointment request\n2. Lab results available for John Doe\n3. Prescription refill request\n4. System maintenance notice\n5. New message from admin');
+        function logoutUser(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                api.clearTokens();
+                localStorage.removeItem('userData');
+                sessionStorage.removeItem('userData');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function switchTab(tabId) {
+            const validTabs = ['dashboard', 'settings', 'appointments', 'patients', 'schedule', 'messages'];
+            // Hide all tabs
+            document.querySelectorAll('.tab-view').forEach(t => t.style.display = 'none');
+
+            if (validTabs.includes(tabId)) {
+                const target = document.getElementById(tabId + 'View');
+                if (target) target.style.display = 'block';
+                if (tabId === 'appointments') loadAllAppointments();
+                if (tabId === 'patients') loadPatients();
+                if (tabId === 'schedule') loadSchedule();
+                if (tabId === 'messages') loadMessages();
+            } else {
+                document.getElementById('placeholderView').style.display = 'block';
+                document.getElementById('placeholderTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1);
+            }
+
+            // Update sidebar highlights
+            document.querySelectorAll('.sidebar-menu .menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.querySelector('span') && item.querySelector('span').textContent.toLowerCase() === tabId) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Close mobile sidebar
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            }
+        }
+
+        function getActionButtons(apt) {
+            const s = apt.status;
+            let btns = '';
+            if (s === 'pending') {
+                btns += `<button class="btn btn-sm btn-success me-1" onclick="updateAppointmentStatus(${apt.id}, 'confirmed', this)"><i class="bi bi-check-lg me-1"></i>Confirm</button>`;
+                btns += `<button class="btn btn-sm btn-outline-danger" onclick="updateAppointmentStatus(${apt.id}, 'cancelled', this)"><i class="bi bi-x-lg me-1"></i>Cancel</button>`;
+            } else if (s === 'confirmed') {
+                if (apt.appointment_type === 'online') {
+                    btns += `<button class="btn btn-sm btn-info text-dark fw-bold me-1" onclick="alert('Starting Video Call...')"><i class="bi bi-camera-video me-1"></i>Join Call</button>`;
+                }
+                btns += `<button class="btn btn-sm btn-primary me-1" onclick="updateAppointmentStatus(${apt.id}, 'completed', this)"><i class="bi bi-check2-all me-1"></i>Complete</button>`;
+                btns += `<button class="btn btn-sm btn-outline-danger" onclick="updateAppointmentStatus(${apt.id}, 'cancelled', this)"><i class="bi bi-x-lg me-1"></i>Cancel</button>`;
+            } else {
+                btns = `<span class="text-muted small fst-italic">No actions</span>`;
+            }
+            return `<div class="d-flex align-items-center ms-3">${btns}</div>`;
+        }
+
+        async function updateAppointmentStatus(aptId, newStatus, triggerBtn) {
+            const originalContent = triggerBtn.innerHTML;
+            triggerBtn.disabled = true;
+            triggerBtn.innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
+            try {
+                await api.appointments.patch(aptId, { status: newStatus });
+                // Refresh both views
+                await loadDashboardData();
+                if (document.getElementById('appointmentsView').style.display !== 'none') {
+                    await loadAllAppointments();
+                }
+            } catch (err) {
+                console.error('Status update failed:', err);
+                alert('Failed to update status: ' + err.message);
+                triggerBtn.disabled = false;
+                triggerBtn.innerHTML = originalContent;
+            }
+        }
+
+        async function loadAllAppointments() {
+            const container = document.getElementById('allAppointmentsContainer');
+            container.innerHTML = `<div class="text-center p-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading...</p></div>`;
+            try {
+                const data = await api.appointments.list();
+                if (data.length === 0) {
+                    container.innerHTML = `<div class="text-center p-4"><i class="bi bi-calendar-x fs-2 text-muted d-block mb-2"></i><p class="text-muted">No appointments found.</p></div>`;
+                    return;
+                }
+                container.innerHTML = data.map((apt) => {
+                    const [h, m] = (apt.appointment_time || '09:00').split(':');
+                    const hi = parseInt(h);
+                    const ampm = hi >= 12 ? 'PM' : 'AM';
+                    const dh = hi % 12 || 12;
+                    const patientName = typeof apt.patient === 'object'
+                        ? (apt.patient.full_name || apt.patient.first_name || 'Patient')
+                        : (apt.patient || 'Unknown');
+                    const statusClass = apt.status === 'completed' ? 'status-completed' : apt.status === 'cancelled' ? 'status-cancelled' : 'status-confirmed';
+                    const statusLabel = (apt.status || 'scheduled').charAt(0).toUpperCase() + (apt.status || 'scheduled').slice(1);
+                    const typeBadge = apt.appointment_type === 'online' ? '<span class="badge bg-info text-dark ms-2" style="font-size:0.7rem;"><i class="bi bi-camera-video me-1"></i>Online</span>' : '<span class="badge bg-secondary ms-2" style="font-size:0.7rem;"><i class="bi bi-building me-1"></i>Offline</span>';
+                    return `
+                        <div class="appointment-item" id="apt-row-${apt.id}">
+                            <div class="appointment-time text-center">
+                                <div class="time fw-bold text-primary fs-5">${dh}:${m}</div>
+                                <div class="date text-muted">${ampm}</div>
+                            </div>
+                            <div class="patient-info ms-4 flex-grow-1">
+                                <h4 class="mb-1 fw-bold">${patientName}${typeBadge}</h4>
+                                <p class="mb-0 text-muted"><i class="bi bi-calendar-event me-1"></i> ${apt.appointment_date}</p>
+                                <p class="mb-0 text-muted mt-1"><i class="bi bi-file-medical me-1"></i> ${apt.symptoms || 'Routine Checkup'}</p>
+                            </div>
+                            <span class="appointment-status ${statusClass}">${statusLabel}</span>
+                            ${getActionButtons(apt)}
+                        </div>`;
+                }).join('');
+
+                // Wire up the filter dropdown
+                document.getElementById('aptFilterStatus').onchange = function() {
+                    const f = this.value;
+                    document.querySelectorAll('#allAppointmentsContainer .appointment-item').forEach(el => {
+                        const s = el.querySelector('.appointment-status').textContent.toLowerCase();
+                        el.style.display = (!f || s === f) ? 'flex' : 'none';
+                    });
+                };
+            } catch (err) {
+                container.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Failed to load appointments.</div>`;
+            }
+        }
+
+        async function loadPatients() {
+            const container = document.getElementById('patientsContainer');
+            container.innerHTML = `<div class="text-center p-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading patients...</p></div>`;
+            try {
+                const data = await api.appointments.list();
+                const seen = new Set();
+                const patients = [];
+                data.forEach(apt => {
+                    const p = typeof apt.patient === 'object' ? apt.patient : {id: apt.patient, first_name: 'Unknown'};
+                    if (p && p.id && !seen.has(p.id)) {
+                        seen.add(p.id);
+                        patients.push({...p, lastVisit: apt.appointment_date, lastSymptom: apt.symptoms || 'N/A'});
+                    }
+                });
+                if (patients.length === 0) {
+                    container.innerHTML = `<div class="text-center p-4"><i class="bi bi-people fs-2 text-muted d-block mb-2"></i><p class="text-muted">No patients found.</p></div>`;
+                    return;
+                }
+                container.innerHTML = `<div class="row g-3">${patients.map(p => `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-0 shadow-sm h-100 p-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <div style="background: var(--gradient-primary); color: white; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; flex-shrink: 0;">
+                                    ${(p.first_name || 'P').charAt(0).toUpperCase()}
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="mb-0 fw-bold">${p.full_name || ((p.first_name || '') + ' ' + (p.last_name || '')).trim() || 'Patient'}</h6>
+                                    <small class="text-muted">${p.email || 'No email on record'}</small>
+                                </div>
+                            </div>
+                            <p class="mb-1 text-muted small"><i class="bi bi-calendar me-1"></i> Last Visit: <strong>${p.lastVisit}</strong></p>
+                            <p class="mb-0 text-muted small"><i class="bi bi-file-medical me-1"></i> ${p.lastSymptom}</p>
+                        </div>
+                    </div>`).join('')}</div>`;
+            } catch (err) {
+                container.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Failed to load patients.</div>`;
+            }
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Saving...`;
+            
+            try {
+                // Submit base auth profile
+                await api.auth.updateProfile({
+                    first_name: document.getElementById('settingsFirstName').value,
+                    last_name: document.getElementById('settingsLastName').value
+                });
+
+                // Submit doctor specific profile
+                await api.doctors.updateProfile({
+                    specialization: document.getElementById('settingsSpecialization').value,
+                    experience_years: document.getElementById('settingsExperience').value,
+                    consultation_fee: document.getElementById('settingsFee').value,
+                    clinic_address: document.getElementById('settingsClinic').value,
+                    about: document.getElementById('settingsAbout').value
+                });
+
+                btn.innerHTML = `<i class="bi bi-check-circle me-2"></i>Saved!`;
+                btn.classList.replace('btn-primary', 'btn-success');
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="bi bi-save me-2"></i> Save Changes`;
+                    btn.classList.replace('btn-success', 'btn-primary');
+                    // Refresh data globally
+                    loadDashboardData();
+                }, 2000);
+            } catch (err) {
+                console.error("Failed saved", err);
+                alert("Failed to update profile. " + (err.response?.data?.error || err.message));
+                btn.innerHTML = `<i class="bi bi-save me-2"></i> Save Changes`;
+            }
         });
 
-        // User menu
-        document.querySelector('.user-menu').addEventListener('click', function() {
-            alert('Doctor Menu:\n\n• Profile Settings\n• Schedule Preferences\n• Payment Settings\n• Help & Support\n• Logout');
-        });
+        async function loadDashboardData() {
+            try {
+                // Fetch Appointments and Profile configured for logged-in doctor concurrently
+                const [appointmentsData, doctorProfile] = await Promise.all([
+                    api.appointments.list(),
+                    api.doctors.getProfile().catch(e => ({})) // fail gracefully if profile fetch errors
+                ]);
+                
+                // Populate settings defaults
+                if (doctorProfile && document.getElementById('settingsFirstName')) {
+                    const ud = JSON.parse(localStorage.getItem('userData') || '{}');
+                    document.getElementById('settingsFirstName').value = ud.first_name || '';
+                    document.getElementById('settingsLastName').value = ud.last_name || '';
+                    document.getElementById('settingsSpecialization').value = doctorProfile.specialization || '';
+                    document.getElementById('settingsExperience').value = doctorProfile.experience_years || '';
+                    document.getElementById('settingsFee').value = doctorProfile.consultation_fee || '';
+                    document.getElementById('settingsClinic').value = doctorProfile.clinic_address || '';
+                    document.getElementById('settingsAbout').value = doctorProfile.about || '';
+                }
+
+                // Track unique patients by their IDs
+                const uniquePatients = new Set();
+                appointmentsData.forEach(apt => {
+                    const patientId = typeof apt.patient === 'object' ? apt.patient.id : apt.patient;
+                    if (patientId) uniquePatients.add(patientId);
+                });
+
+                // Calculate revenue based on doctor's consultation fee * total appointments
+                const fee = parseFloat(doctorProfile.consultation_fee || "0") || 0;
+                const revenue = fee * appointmentsData.length;
+                const formattedRevenue = "₹" + (revenue >= 1000 ? (revenue/1000).toFixed(1) + "K" : revenue);
+
+                // Update all 4 stats cards dynamically based on fetched datastructure
+                const statCards = document.querySelectorAll('.stat-card .stat-value');
+                if (statCards.length >= 4) {
+                    statCards[0].textContent = uniquePatients.size; // Total Unique Patients
+                    statCards[1].textContent = appointmentsData.length; // Appointments
+                    statCards[2].textContent = formattedRevenue; // Real Calculated Revenue
+                    statCards[3].textContent = parseFloat(doctorProfile.rating || "0").toFixed(1); // Actual Rating
+                }
+
+                document.getElementById('sidebarAptCount').textContent = appointmentsData.length;
+
+                document.querySelector('.welcome-section p').textContent = `You have ${appointmentsData.length} appointments scheduled for today`;
+                
+                const container = document.getElementById('appointmentsContainer');
+                container.innerHTML = ''; // clear loading state
+                
+                if (appointmentsData.length === 0) {
+                    container.innerHTML = `<div class="text-center p-4"><p class="text-muted"><i class="bi bi-calendar-x fs-2 d-block mb-2"></i>You have no upcoming appointments.</p></div>`;
+                    return;
+                }
+                
+                // Render List
+                appointmentsData.forEach((apt, idx) => {
+                    // Extract HH:MM and parts
+                    let [hour, minute, ...rest] = (apt.appointment_time || "09:00").split(':');
+                    let timeInt = parseInt(hour, 10);
+                    let ampm = timeInt >= 12 ? 'PM' : 'AM';
+                    let displayHour = timeInt % 12 || 12;
+
+                    // Parse patient name dynamically from the patient serializer object
+                    let patientName = "Unknown Patient";
+                    if (typeof apt.patient === "object" && apt.patient) {
+                        patientName = `${apt.patient.full_name || apt.patient.first_name || 'Patient'}`;
+                    } else if (typeof apt.patient === "string") {
+                        patientName = apt.patient;
+                    }
+                    
+                    const statusClass = apt.status === 'completed' ? 'status-completed' : (apt.status === 'cancelled' ? 'status-cancelled' : 'status-confirmed');
+                    const formattedStatus = (apt.status || "Scheduled").charAt(0).toUpperCase() + (apt.status || "Scheduled").slice(1);
+                    const typeBadge = apt.appointment_type === 'online' ? '<span class="badge bg-info text-dark ms-2" style="font-size:0.7rem;"><i class="bi bi-camera-video me-1"></i>Online</span>' : '<span class="badge bg-secondary ms-2" style="font-size:0.7rem;"><i class="bi bi-building me-1"></i>Offline</span>';
+                    
+                    container.innerHTML += `
+                        <div class="appointment-item" data-aos="fade-left" data-aos-delay="${100 + (idx * 50)}">
+                           <div class="appointment-time text-center">
+                               <div class="time fw-bold text-primary fs-4">${displayHour}:${minute}</div>
+                               <div class="date text-muted fw-semibold">${ampm}</div>
+                           </div>
+                           <div class="patient-info ms-4 flex-grow-1">
+                               <h4 class="mb-1 fw-bold">${patientName}${typeBadge}</h4>
+                               <p class="mb-0 text-muted"><i class="bi bi-calendar-event me-1"></i> Date: <span class="fw-medium">${apt.appointment_date}</span></p>
+                               <p class="mb-0 text-muted mt-1"><i class="bi bi-file-medical me-1"></i> Symptoms: <span class="fw-medium text-dark">${apt.symptoms || "Routine Checkup"}</span></p>
+                           </div>
+                           <span class="appointment-status ${statusClass} ms-3 align-self-start">${formattedStatus}</span>
+                           ${getActionButtons(apt)}
+                       </div>
+                    `;
+                });
+            } catch (err) {
+                console.error("Failed importing dashboard data:", err);
+                document.getElementById('appointmentsContainer').innerHTML = `<div class="alert alert-danger mx-3"><i class="bi bi-exclamation-triangle-fill me-2"></i>Failed to load appointments.</div>`;
+            }
+        }
 
         // Quick action buttons
         document.querySelectorAll('.quick-action-btn').forEach(btn => {
@@ -945,60 +1537,205 @@
                 e.preventDefault();
                 const action = this.querySelector('span').textContent;
                 
-                switch(action) {
-                    case 'Add Patient':
-                        alert('Add Patient feature - Coming soon!');
-                        break;
-                    case 'Schedule Appointment':
-                        alert('Schedule Appointment feature - Coming soon!');
-                        break;
-                    case 'New Prescription':
-                        alert('New Prescription feature - Coming soon!');
-                        break;
-                    case 'Start Consultation':
-                        alert('Video Consultation feature - Coming soon!');
-                        break;
+                if (action === 'View Records') {
+                    // Open a native file picker securely simulating upload parsing
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = "application/pdf,image/*";
+                    input.click();
+                } else if (action === 'Schedule Appointment' || action === 'Messages') {
+                    // Start an interactive mock loading sequence
+                    const originalHTML = this.innerHTML;
+                    this.innerHTML = `<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> <span class="ms-2">Loading...</span>`;
+                    this.classList.add('disabled');
+                    setTimeout(() => {
+                        this.innerHTML = originalHTML;
+                        this.classList.remove('disabled');
+                        alert("The " + action + " module requires database expansion before it can be used!");
+                    }, 1500);
+                } else if (action === 'Add Patient') {
+                   // Interactive mock
+                   const originalHTML = this.innerHTML;
+                   this.innerHTML = `<i class="bi bi-check-circle-fill text-success"></i> <span>Ready</span>`;
+                   setTimeout(() => {
+                       this.innerHTML = originalHTML;
+                   }, 2000);
                 }
             });
         });
 
-        // Appointment actions
-        document.querySelectorAll('.btn-action').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const title = this.getAttribute('title');
-                const appointmentItem = this.closest('.appointment-item');
-                const patientName = appointmentItem.querySelector('h4').textContent;
+        // Schedule Logic
+        async function loadSchedule() {
+            try {
+                const data = await api.doctors.getAvailability();
+                let html = '<div class="row g-3">';
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                days.forEach((day, i) => {
+                    const avail = data.find(d => d.day_of_week === i) || {start_time: '09:00:00', end_time: '17:00:00', is_available: false};
+                    html += `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card p-3 shadow-sm border-0 h-100">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="day_${i}" ${avail.is_available ? 'checked' : ''}>
+                                    <label class="form-check-label fw-bold ms-1" for="day_${i}">${day}</label>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="time" class="form-control form-control-sm" id="start_${i}" value="${avail.start_time.substring(0,5)}" ${!avail.is_available ? 'disabled' : ''}>
+                                    <span class="text-muted fw-bold">to</span>
+                                    <input type="time" class="form-control form-control-sm" id="end_${i}" value="${avail.end_time.substring(0,5)}" ${!avail.is_available ? 'disabled' : ''}>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                document.getElementById('scheduleBlocks').innerHTML = html;
                 
-                switch(title) {
-                    case 'View Profile':
-                        alert(`Viewing profile for: ${patientName}`);
-                        break;
-                    case 'Medical Records':
-                        alert(`Opening medical records for: ${patientName}`);
-                        break;
-                    case 'Start Consultation':
-                        alert(`Starting video consultation with: ${patientName}`);
-                        break;
-                    case 'Prescription':
-                        alert(`Creating prescription for: ${patientName}`);
-                        break;
+                days.forEach((day, i) => {
+                    document.getElementById(`day_${i}`).addEventListener('change', function() {
+                        document.getElementById(`start_${i}`).disabled = !this.checked;
+                        document.getElementById(`end_${i}`).disabled = !this.checked;
+                    });
+                });
+            } catch (err) {
+                document.getElementById('scheduleBlocks').innerHTML = '<div class="alert alert-danger mx-3">Failed to load schedule.</div>';
+            }
+        }
+        
+        async function saveSchedule() {
+            const btn = event.currentTarget;
+            const orig = btn.innerHTML;
+            btn.innerHTML = 'Saving...';
+            btn.disabled = true;
+            try {
+                const existing = await api.doctors.getAvailability();
+                for (let i = 0; i < 7; i++) {
+                    const is_available = document.getElementById(`day_${i}`).checked;
+                    const start_time = document.getElementById(`start_${i}`).value + ":00";
+                    const end_time = document.getElementById(`end_${i}`).value + ":00";
+                    
+                    const exist = existing.find(d => d.day_of_week === i);
+                    if (exist) {
+                        await api.doctors.updateAvailability(exist.id, { day_of_week: i, start_time, end_time, is_available });
+                    } else {
+                        await api.doctors.addAvailability({ day_of_week: i, start_time, end_time, is_available });
+                    }
                 }
-            });
-        });
+                btn.innerHTML = '<i class="bi bi-check me-1"></i>Saved';
+                setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+            } catch (e) {
+                alert("Failed to save schedule.");
+                btn.innerHTML = orig; btn.disabled = false;
+            }
+        }
 
-        // View All button
-        document.querySelector('.btn-view-all').addEventListener('click', function() {
-            alert('Viewing all appointments...');
-        });
-
-        // Search functionality
-        document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const searchTerm = this.value;
-                if (searchTerm) {
-                    alert(`Searching for: ${searchTerm}`);
+        async function deleteAccount() {
+            if (confirm("WARNING: Are you absolutely sure you want to delete your doctor account? This action cannot be undone and will permanently erase all your data and scheduled availability.")) {
+                try {
+                    await api.auth.deleteAccount();
+                    alert("Your account has been successfully deleted.");
+                    api.auth.logout();
+                } catch (err) {
+                    alert('Error deleting account: ' + err.message);
                 }
             }
+        }
+
+        // Messages Logic
+        let currentChatUserId = null;
+        async function loadMessages() {
+            try {
+                const msgs = await api.messages.list();
+                const ud = JSON.parse(localStorage.getItem('userData'));
+                const myId = ud.id;
+                
+                const contacts = {};
+                msgs.forEach(m => {
+                    const otherId = m.sender === myId ? m.receiver : m.sender;
+                    const otherName = m.sender === myId ? m.receiver_name : m.sender_name;
+                    if (!contacts[otherId]) contacts[otherId] = { id: otherId, name: otherName, msgs: [] };
+                    contacts[otherId].msgs.push(m);
+                });
+                
+                window.chatData = contacts;
+                
+                let html = '';
+                for (let cid in contacts) {
+                    const c = contacts[cid];
+                    const lastMsg = c.msgs[c.msgs.length - 1];
+                    const countUnread = c.msgs.filter(x => x.receiver === myId && !x.is_read).length;
+                    html += `
+                        <div class="p-3 border-bottom contact-item hover-bg-light" style="cursor:pointer; transition: 0.2s;" onclick="openChat(${c.id})">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-dark">${c.name}</span>
+                                ${countUnread > 0 ? `<span class="badge bg-danger rounded-pill">${countUnread}</span>` : ''}
+                            </div>
+                            <div class="small text-muted text-truncate mt-1">${lastMsg.content}</div>
+                        </div>
+                    `;
+                }
+                document.getElementById('messageContactsList').innerHTML = html || '<div class="p-4 text-center text-muted">No messages found.</div>';
+            } catch (e) {
+                document.getElementById('messageContactsList').innerHTML = '<div class="p-4 text-center text-danger">Failed to load.</div>';
+            }
+        }
+        
+        function openChat(contactId) {
+            currentChatUserId = contactId;
+            const c = window.chatData[contactId];
+            document.getElementById('activeChatName').textContent = c.name;
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendMessageBtn').disabled = false;
+            
+            let html = '';
+            const myId = JSON.parse(localStorage.getItem('userData')).id;
+            c.msgs.forEach(m => {
+                const isMe = m.sender === myId;
+                html += `
+                    <div class="d-flex mb-3 ${isMe ? 'justify-content-end' : ''}">
+                        <div class="p-2 px-3 rounded-4 shadow-sm ${isMe ? 'bg-primary text-white' : 'bg-white border'}" style="max-width: 80%;">
+                            <div class="mb-1">${m.content}</div>
+                            <div style="font-size: 0.65rem; opacity: 0.8;" class="text-end">${new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        </div>
+                    </div>
+                `;
+                if (!isMe && !m.is_read) {
+                    api.messages.read(m.id).catch(e=>{});
+                }
+            });
+            document.getElementById('chatHistory').innerHTML = html || '<div class="text-center text-muted mt-5">Start the conversation!</div>';
+            document.getElementById('chatHistory').scrollTop = document.getElementById('chatHistory').scrollHeight;
+        }
+        
+        async function sendMessage() {
+            if (!currentChatUserId) return;
+            const input = document.getElementById('messageInput');
+            const txt = input.value.trim();
+            if(!txt) return;
+            
+            try {
+                await api.messages.create({ receiver: currentChatUserId, content: txt });
+                input.value = '';
+                loadMessages().then(() => {
+                    openChat(currentChatUserId);
+                });
+            } catch(e) {
+                alert("Failed to send message: " + e.message);
+            }
+        }
+
+        // Search functionality synced live
+        document.querySelector('.search-bar input').addEventListener('input', function(e) {
+            const searchTerm = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.appointment-item');
+            cards.forEach(card => {
+                const textContext = card.textContent.toLowerCase();
+                if (textContext.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
 
         // Check user session
@@ -1006,15 +1743,32 @@
             const userData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
             
             if (!userData) {
-                // Redirect to login if no session found
                 window.location.href = 'login.html';
             } else {
                 const user = JSON.parse(userData);
-                if (user.userType !== 'doctor') {
-                    // Redirect to appropriate dashboard
-                    if (user.userType === 'patient') {
+                const role = user.role || user.userType;
+                if (role !== 'doctor') {
+                    if (role === 'patient') {
                         window.location.href = 'patient-dashboard.html';
                     }
+                } else {
+                    const initials = (user.first_name ? user.first_name.charAt(0) : '') + (user.last_name ? user.last_name.charAt(0) : 'D');
+                    const fullName = user.full_name || (user.first_name + ' ' + user.last_name);
+                    
+                    document.querySelector('.welcome-section h1').textContent = `Good Morning, Dr. ${user.last_name || user.first_name || 'Doctor'}!`;
+                    
+                    document.querySelectorAll('.user-avatar, .user-avatar-small').forEach(el => {
+                        if(el) el.textContent = initials;
+                    });
+                    
+                    const userInfoH4 = document.querySelector('.user-info h4');
+                    if(userInfoH4) userInfoH4.textContent = 'Dr. ' + fullName;
+
+                    const topNavSpan = document.querySelector('.user-menu span');
+                    if(topNavSpan) topNavSpan.textContent = 'Dr. ' + fullName;
+                    
+                    // Boot up dashboard data sync
+                    loadDashboardData();
                 }
             }
         });

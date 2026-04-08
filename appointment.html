@@ -10,18 +10,27 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         :root {
             --primary-blue: #0066cc;
+            --primary-light: #0088ff;
             --light-blue: #e6f2ff;
             --dark-blue: #004499;
-            --text-dark: #333333;
+            --text-dark: #1a1a2e;
             --text-light: #666666;
             --border-color: #e0e0e0;
             --success-green: #28a745;
+            --warning-orange: #ff9800;
             --danger-red: #dc3545;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
         }
 
         * {
@@ -35,134 +44,263 @@
             color: var(--text-dark);
             line-height: 1.6;
             background: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--light-blue);
+            border-top-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Navbar Styles */
         .navbar {
-            background: white !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
             padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: var(--shadow-md);
         }
 
         .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: var(--primary-blue) !important;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            font-size: 1.5rem;
         }
 
         .navbar-nav .nav-link {
             color: var(--text-dark) !important;
             font-weight: 500;
             margin: 0 0.5rem;
-            transition: color 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
-        .navbar-nav .nav-link:hover {
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
             color: var(--primary-blue) !important;
+            background: var(--light-blue);
+        }
+
+        .btn-book-nav {
+            background: var(--gradient-primary);
+            color: white !important;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-book-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white !important;
         }
 
         /* Page Header */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            background: var(--gradient-dark);
             color: white;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 25s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-50px, 50px) rotate(180deg); }
         }
 
         .page-header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .page-header p {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
         }
 
         /* Appointment Form */
         .appointment-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .appointment-form {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         .form-header {
-            background: var(--light-blue);
-            padding: 2rem;
+            background: var(--gradient-primary);
+            padding: 2.5rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
         }
 
         .form-header h2 {
-            color: var(--primary-blue);
-            font-weight: 600;
+            color: white;
+            font-weight: 700;
             margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .form-header p {
-            color: var(--text-light);
+            color: rgba(255,255,255,0.9);
             margin-bottom: 0;
+            position: relative;
+            z-index: 1;
         }
 
         .form-body {
-            padding: 2rem;
+            padding: 2.5rem;
         }
 
         .form-section {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .form-section h3 {
             color: var(--text-dark);
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--light-blue);
+            font-size: 1.4rem;
         }
 
         .form-label {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-dark);
             margin-bottom: 0.5rem;
         }
 
         .form-control, .form-select {
             border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.75rem;
+            border-radius: 10px;
+            padding: 0.875rem;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .form-control:focus, .form-select:focus {
             border-color: var(--primary-blue);
-            box-shadow: 0 0 0 0.2rem rgba(0,102,204,0.25);
+            box-shadow: 0 0 0 0.2rem rgba(0,102,204,0.1);
+            outline: none;
         }
 
         .selected-doctor {
             background: var(--light-blue);
             border: 2px solid var(--primary-blue);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selected-doctor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
         }
 
         .selected-doctor h4 {
             color: var(--primary-blue);
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.5rem;
+            font-size: 1.3rem;
         }
 
         /* Time Slots */
         .time-slots {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
         }
@@ -170,22 +308,51 @@
         .time-slot {
             background: white;
             border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.75rem;
+            border-radius: 12px;
+            padding: 1rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-slot::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .time-slot:hover {
             border-color: var(--primary-blue);
             background: var(--light-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
         }
 
         .time-slot.selected {
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             color: white;
             border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .time-slot.selected::before {
+            opacity: 1;
+        }
+
+        .time-slot.selected .time,
+        .time-slot.selected .status {
+            color: white;
+            position: relative;
+            z-index: 1;
         }
 
         .time-slot.disabled {
@@ -193,16 +360,21 @@
             color: #ccc;
             cursor: not-allowed;
             opacity: 0.6;
+            border-color: var(--border-color);
         }
 
         .time-slot .time {
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .time-slot .status {
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         /* Date Selection */
@@ -211,73 +383,130 @@
             gap: 1rem;
             overflow-x: auto;
             padding: 1rem 0;
+            scrollbar-width: thin;
+        }
+
+        .date-selection::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .date-selection::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .date-selection::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 3px;
         }
 
         .date-option {
-            min-width: 100px;
+            min-width: 110px;
             background: white;
             border: 2px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1rem;
+            border-radius: 15px;
+            padding: 1.25rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .date-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .date-option:hover {
             border-color: var(--primary-blue);
             background: var(--light-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
         }
 
         .date-option.selected {
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             color: white;
             border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .date-option.selected::before {
+            opacity: 1;
+        }
+
+        .date-option.selected .day,
+        .date-option.selected .date,
+        .date-option.selected .month {
+            color: white;
+            position: relative;
+            z-index: 1;
         }
 
         .date-option .day {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             opacity: 0.8;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         .date-option .date {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 0.25rem 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0.5rem 0;
+            position: relative;
+            z-index: 1;
         }
 
         .date-option .month {
             font-size: 0.9rem;
             opacity: 0.8;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         /* Symptoms Section */
         .symptoms-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.75rem;
             margin-top: 1rem;
         }
 
         .symptom-tag {
-            background: var(--light-blue);
+            background: white;
             color: var(--primary-blue);
-            border: 1px solid var(--primary-blue);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary-blue);
+            border-radius: 25px;
+            padding: 0.6rem 1.25rem;
             font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .symptom-tag:hover {
-            background: var(--primary-blue);
-            color: white;
+            background: var(--light-blue);
+            transform: translateY(-2px);
         }
 
         .symptom-tag.selected {
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             color: white;
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         /* Form Actions */
@@ -285,77 +514,87 @@
             display: flex;
             gap: 1rem;
             justify-content: space-between;
-            padding: 2rem;
+            padding: 2.5rem;
             background: #f8f9fa;
-            border-top: 1px solid var(--border-color);
+            border-top: 2px solid var(--border-color);
         }
 
         .btn-back {
-            background: transparent;
-            color: var(--text-light);
+            background: white;
+            color: var(--text-dark);
             border: 2px solid var(--border-color);
-            padding: 0.75rem 2rem;
-            border-radius: 25px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-back:hover {
-            background: var(--border-color);
-        }
-
-        .btn-submit {
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
+            padding: 0.875rem 2.5rem;
             border-radius: 25px;
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
-        .btn-submit:hover {
-            background: var(--dark-blue);
+        .btn-back:hover {
+            background: var(--border-color);
             transform: translateY(-2px);
+        }
+
+        .btn-submit {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 2.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white;
         }
 
         /* Progress Steps */
         .progress-steps {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .progress-steps::before {
             content: '';
             position: absolute;
-            top: 20px;
+            top: 25px;
             left: 0;
             right: 0;
-            height: 2px;
+            height: 3px;
             background: var(--border-color);
             z-index: 1;
         }
 
         .progress-step {
             background: white;
-            border: 2px solid var(--border-color);
+            border: 3px solid var(--border-color);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.1rem;
             position: relative;
             z-index: 2;
+            transition: all 0.3s ease;
         }
 
         .progress-step.active {
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             color: white;
             border-color: var(--primary-blue);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .progress-step.completed {
@@ -366,12 +605,13 @@
 
         .step-label {
             position: absolute;
-            top: 50px;
+            top: 60px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             white-space: nowrap;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
         /* Success Modal */
@@ -382,42 +622,73 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
         }
 
         .success-content {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 3rem;
             text-align: center;
-            max-width: 400px;
-            animation: slideIn 0.3s ease;
+            max-width: 450px;
+            animation: slideIn 0.4s ease;
+            box-shadow: var(--shadow-lg);
         }
 
         .success-icon {
-            font-size: 4rem;
+            font-size: 5rem;
             color: var(--success-green);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 0.6s ease;
         }
 
         @keyframes slideIn {
             from {
-                transform: translateY(-50px);
+                transform: translateY(-50px) scale(0.9);
                 opacity: 0;
             }
             to {
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
                 opacity: 1;
             }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-blue);
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
             .page-header h1 {
                 font-size: 2rem;
+            }
+            
+            .page-header p {
+                font-size: 1.1rem;
             }
             
             .time-slots {
@@ -431,12 +702,36 @@
             .btn-back, .btn-submit {
                 width: 100%;
             }
+
+            .progress-step {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+                top: 50px;
+            }
+
+            .main-content {
+                padding: 2rem 0;
+            }
+
+            .form-body {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
     <!-- Navigation Header -->
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="index.html">
                 <i class="bi bi-hospital"></i> DocConnect
@@ -462,7 +757,9 @@
                         <a class="nav-link" href="login.html">Login</a>
                     </li>
                     <li class="nav-item ms-2">
-                        <button class="btn btn-primary" style="border-radius: 25px; padding: 0.5rem 1.5rem;">Book Now</button>
+                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'">
+                            <i class="bi bi-calendar-check"></i> Book Now
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -472,270 +769,186 @@
     <!-- Page Header -->
     <div class="page-header">
         <div class="container">
-            <h1>Book Your Appointment</h1>
-            <p>Schedule your visit with just a few clicks</p>
+            <h1 data-aos="fade-up">Book Your Appointment</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Schedule your visit with just a few clicks</p>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="container">
-        <div class="appointment-container">
-            <!-- Progress Steps -->
-            <div class="progress-steps">
-                <div class="progress-step active">
-                    1
-                    <span class="step-label">Select Doctor</span>
-                </div>
-                <div class="progress-step">
-                    2
-                    <span class="step-label">Choose Date & Time</span>
-                </div>
-                <div class="progress-step">
-                    3
-                    <span class="step-label">Patient Details</span>
-                </div>
-                <div class="progress-step">
-                    4
-                    <span class="step-label">Confirmation</span>
-                </div>
-            </div>
-
-            <!-- Appointment Form -->
-            <div class="appointment-form">
-                <div class="form-header">
-                    <h2>Schedule Your Visit</h2>
-                    <p>Fill in the details below to book your appointment</p>
+    <div class="main-content">
+        <div class="container">
+            <div class="appointment-container" data-aos="fade-up" data-aos-duration="800">
+                <!-- Progress Steps -->
+                <div class="progress-steps">
+                    <div class="progress-step active">
+                        1
+                        <span class="step-label">Select Doctor</span>
+                    </div>
+                    <div class="progress-step">
+                        2
+                        <span class="step-label">Choose Date & Time</span>
+                    </div>
+                    <div class="progress-step">
+                        3
+                        <span class="step-label">Patient Details</span>
+                    </div>
+                    <div class="progress-step">
+                        4
+                        <span class="step-label">Confirmation</span>
+                    </div>
                 </div>
 
-                <form id="appointmentForm">
-                    <div class="form-body">
-                        <!-- Step 1: Doctor Selection -->
-                        <div class="form-section" id="step1">
-                            <h3><i class="bi bi-person-badge"></i> Select Doctor</h3>
-                            
-                            <div class="selected-doctor" id="selectedDoctorInfo">
-                                <h4 id="doctorName">Dr. Sarah Johnson</h4>
-                                <p id="doctorSpecialty">Cardiologist • Medical Center, Downtown</p>
-                                <p id="doctorExperience">15 years experience • Rating: 4.8/5</p>
-                            </div>
+                <!-- Appointment Form -->
+                <div class="appointment-form">
+                    <div class="form-header">
+                        <h2>Schedule Your Visit</h2>
+                        <p>Fill in the details below to book your appointment</p>
+                    </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Or choose a different doctor:</label>
-                                <select class="form-select" id="doctorSelect">
-                                    <option value="Dr. Sarah Johnson" selected>Dr. Sarah Johnson - Cardiologist</option>
-                                    <option value="Dr. Michael Chen">Dr. Michael Chen - Dermatologist</option>
-                                    <option value="Dr. Emily Rodriguez">Dr. Emily Rodriguez - Pediatrician</option>
-                                    <option value="Dr. James Wilson">Dr. James Wilson - Orthopedic Surgeon</option>
-                                    <option value="Dr. Lisa Anderson">Dr. Lisa Anderson - Neurologist</option>
-                                    <option value="Dr. Robert Taylor">Dr. Robert Taylor - General Physician</option>
-                                </select>
-                            </div>
-                        </div>
+                    <form id="appointmentForm">
+                        <div class="form-body">
+                            <!-- Step 1: Doctor Selection -->
+                            <div class="form-section" id="step1">
+                                <h3><i class="bi bi-person-badge"></i> Select Doctor</h3>
+                                
+                                <div class="selected-doctor" id="selectedDoctorInfo">
+                                    <h4 id="doctorName">Dr. Sarah Johnson</h4>
+                                    <p id="doctorSpecialty">Cardiologist • Medical Center, Downtown</p>
+                                    <p id="doctorExperience">15 years experience • Rating: 4.8/5</p>
+                                </div>
 
-                        <!-- Step 2: Date & Time Selection -->
-                        <div class="form-section" id="step2">
-                            <h3><i class="bi bi-calendar3"></i> Select Date & Time</h3>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Choose Date:</label>
-                                <div class="date-selection">
-                                    <div class="date-option selected" data-date="2024-02-10">
-                                        <div class="day">Today</div>
-                                        <div class="date">10</div>
-                                        <div class="month">Feb</div>
-                                    </div>
-                                    <div class="date-option" data-date="2024-02-11">
-                                        <div class="day">Tomorrow</div>
-                                        <div class="date">11</div>
-                                        <div class="month">Feb</div>
-                                    </div>
-                                    <div class="date-option" data-date="2024-02-12">
-                                        <div class="day">Mon</div>
-                                        <div class="date">12</div>
-                                        <div class="month">Feb</div>
-                                    </div>
-                                    <div class="date-option" data-date="2024-02-13">
-                                        <div class="day">Tue</div>
-                                        <div class="date">13</div>
-                                        <div class="month">Feb</div>
-                                    </div>
-                                    <div class="date-option" data-date="2024-02-14">
-                                        <div class="day">Wed</div>
-                                        <div class="date">14</div>
-                                        <div class="month">Feb</div>
-                                    </div>
-                                    <div class="date-option" data-date="2024-02-15">
-                                        <div class="day">Thu</div>
-                                        <div class="date">15</div>
-                                        <div class="month">Feb</div>
-                                    </div>
-                                    <div class="date-option" data-date="2024-02-16">
-                                        <div class="day">Fri</div>
-                                        <div class="date">16</div>
-                                        <div class="month">Feb</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Available Time Slots:</label>
-                                <div class="time-slots">
-                                    <div class="time-slot" data-time="09:00">
-                                        <div class="time">9:00 AM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot" data-time="09:30">
-                                        <div class="time">9:30 AM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot disabled" data-time="10:00">
-                                        <div class="time">10:00 AM</div>
-                                        <div class="status">Booked</div>
-                                    </div>
-                                    <div class="time-slot" data-time="10:30">
-                                        <div class="time">10:30 AM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot" data-time="11:00">
-                                        <div class="time">11:00 AM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot" data-time="11:30">
-                                        <div class="time">11:30 AM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot disabled" data-time="14:00">
-                                        <div class="time">2:00 PM</div>
-                                        <div class="status">Booked</div>
-                                    </div>
-                                    <div class="time-slot" data-time="14:30">
-                                        <div class="time">2:30 PM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot" data-time="15:00">
-                                        <div class="time">3:00 PM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot" data-time="15:30">
-                                        <div class="time">3:30 PM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot" data-time="16:00">
-                                        <div class="time">4:00 PM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                    <div class="time-slot" data-time="16:30">
-                                        <div class="time">4:30 PM</div>
-                                        <div class="status">Available</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 3: Patient Details -->
-                        <div class="form-section" id="step3">
-                            <h3><i class="bi bi-person"></i> Patient Information</h3>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">First Name *</label>
-                                    <input type="text" class="form-control" id="firstName" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Last Name *</label>
-                                    <input type="text" class="form-control" id="lastName" required>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Email Address *</label>
-                                    <input type="email" class="form-control" id="email" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Phone Number *</label>
-                                    <input type="tel" class="form-control" id="phone" required>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Date of Birth *</label>
-                                    <input type="date" class="form-control" id="dob" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Gender *</label>
-                                    <select class="form-select" id="gender" required>
-                                        <option value="">Select Gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="other">Other</option>
+                                <div class="mb-3">
+                                    <label class="form-label">Or choose a different doctor:</label>
+                                    <select class="form-select" id="doctorSelect">
+                                        <option value="">Loading doctors from network...</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Reason for Visit *</label>
-                                <textarea class="form-control" id="reason" rows="3" required></textarea>
+                            <!-- Step 2: Date & Time Selection -->
+                            <div class="form-section" id="step2">
+                                <h3><i class="bi bi-calendar3"></i> Select Date & Time</h3>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Choose Date:</label>
+                                    <div class="date-selection" id="dateSelection">
+                                        <!-- Dates will be populated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Available Time Slots:</label>
+                                    <div class="time-slots" id="timeSlots">
+                                        <!-- Time slots will be populated by JavaScript -->
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Symptoms (Select all that apply):</label>
-                                <div class="symptoms-tags">
-                                    <div class="symptom-tag">Fever</div>
-                                    <div class="symptom-tag">Headache</div>
-                                    <div class="symptom-tag">Cough</div>
-                                    <div class="symptom-tag">Fatigue</div>
-                                    <div class="symptom-tag">Nausea</div>
-                                    <div class="symptom-tag">Dizziness</div>
-                                    <div class="symptom-tag">Chest Pain</div>
-                                    <div class="symptom-tag">Shortness of Breath</div>
-                                    <div class="symptom-tag">Other</div>
+                            <!-- Step 3: Patient Details -->
+                            <div class="form-section" id="step3">
+                                <h3><i class="bi bi-person"></i> Patient Information</h3>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">First Name *</label>
+                                        <input type="text" class="form-control" id="firstName" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Last Name *</label>
+                                        <input type="text" class="form-control" id="lastName" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email Address *</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Phone Number *</label>
+                                        <input type="tel" class="form-control" id="phone" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Date of Birth *</label>
+                                        <input type="date" class="form-control" id="dob" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Gender *</label>
+                                        <select class="form-select" id="gender" required>
+                                            <option value="">Select Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Reason for Visit *</label>
+                                    <textarea class="form-control" id="reason" rows="3" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Symptoms (Select all that apply):</label>
+                                    <div class="symptoms-tags">
+                                        <div class="symptom-tag">Fever</div>
+                                        <div class="symptom-tag">Headache</div>
+                                        <div class="symptom-tag">Cough</div>
+                                        <div class="symptom-tag">Fatigue</div>
+                                        <div class="symptom-tag">Nausea</div>
+                                        <div class="symptom-tag">Dizziness</div>
+                                        <div class="symptom-tag">Chest Pain</div>
+                                        <div class="symptom-tag">Shortness of Breath</div>
+                                        <div class="symptom-tag">Other</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Confirmation -->
+                            <div class="form-section" id="step4">
+                                <h3><i class="bi bi-check-circle"></i> Appointment Confirmation</h3>
+                                
+                                <div class="alert alert-info">
+                                    <h5><i class="bi bi-info-circle"></i> Please review your appointment details:</h5>
+                                    <div id="confirmationDetails">
+                                        <!-- Details will be populated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="terms" required>
+                                        <label class="form-check-label" for="terms">
+                                            I agree to the terms and conditions and privacy policy
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="notifications">
+                                        <label class="form-check-label" for="notifications">
+                                            Send me appointment reminders via email and SMS
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Step 4: Confirmation -->
-                        <div class="form-section" id="step4">
-                            <h3><i class="bi bi-check-circle"></i> Appointment Confirmation</h3>
-                            
-                            <div class="alert alert-info">
-                                <h5><i class="bi bi-info-circle"></i> Please review your appointment details:</h5>
-                                <div id="confirmationDetails">
-                                    <!-- Details will be populated by JavaScript -->
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="terms" required>
-                                    <label class="form-check-label" for="terms">
-                                        I agree to the terms and conditions and privacy policy
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="notifications">
-                                    <label class="form-check-label" for="notifications">
-                                        Send me appointment reminders via email and SMS
-                                    </label>
-                                </div>
-                            </div>
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-back" id="backBtn">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </button>
+                            <button type="submit" class="btn btn-submit" id="submitBtn">
+                                <i class="bi bi-check-circle"></i> Confirm Appointment
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- Form Actions -->
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-back" id="backBtn">
-                            <i class="bi bi-arrow-left"></i> Back
-                        </button>
-                        <button type="submit" class="btn btn-submit" id="submitBtn">
-                            <i class="bi bi-check-circle"></i> Confirm Appointment
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -746,34 +959,179 @@
             <div class="success-icon">
                 <i class="bi bi-check-circle-fill"></i>
             </div>
-            <h3>Appointment Booked Successfully!</h3>
-            <p>Your appointment has been confirmed. You will receive a confirmation email shortly.</p>
-            <button class="btn btn-primary" onclick="closeSuccessModal()">Done</button>
+            <h3 id="successModalTitle">Appointment Booked Successfully!</h3>
+            <p id="successModalSubtitle">Your appointment has been confirmed. You will receive a confirmation email shortly.</p>
+            
+            <div id="modalDetails" class="mt-3 mb-4 text-start bg-light p-3 rounded text-muted shadow-sm" style="font-size: 0.95rem; border: 1px solid #e0e0e0;">
+                <!-- Filled dynamically -->
+            </div>
+            
+            <button class="btn btn-submit" onclick="closeSuccessModal()">Done</button>
         </div>
     </div>
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- API Helper Functions -->
+    <script src="js/api.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 500);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Generate dates for the next 7 days
+        function generateDates() {
+            const dateSelection = document.getElementById('dateSelection');
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const today = new Date();
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                
+                const dayName = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : days[date.getDay()];
+                const dateNum = date.getDate();
+                const monthName = months[date.getMonth()];
+                const dateString = date.toISOString().split('T')[0];
+                
+                const dateOption = document.createElement('div');
+                dateOption.className = 'date-option' + (i === 0 ? ' selected' : '');
+                dateOption.dataset.date = dateString;
+                dateOption.innerHTML = `
+                    <div class="day">${dayName}</div>
+                    <div class="date">${dateNum}</div>
+                    <div class="month">${monthName}</div>
+                `;
+                
+                dateOption.addEventListener('click', function() {
+                    document.querySelectorAll('.date-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedDate = this.dataset.date;
+                    updateTimeSlots();
+                });
+                
+                dateSelection.appendChild(dateOption);
+            }
+        }
+
+        // Generate time slots is now completely dynamic based on doctor schedules
+
         let currentStep = 1;
         let selectedDoctor = '';
+        let selectedDoctorId = '';
         let selectedDate = '';
         let selectedTime = '';
         let selectedSymptoms = [];
+        let allDoctorsData = [];
+        let rescheduleAppId = null;
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if doctor is pre-selected
-            const preSelectedDoctor = localStorage.getItem('selectedDoctor');
-            if (preSelectedDoctor) {
-                document.getElementById('doctorName').textContent = preSelectedDoctor;
-                document.getElementById('doctorSelect').value = preSelectedDoctor;
-                selectedDoctor = preSelectedDoctor;
-                localStorage.removeItem('selectedDoctor');
-            } else {
-                selectedDoctor = document.getElementById('doctorSelect').value;
+        document.addEventListener('DOMContentLoaded', async function() {
+            generateDates();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            rescheduleAppId = urlParams.get('reschedule');
+            if (rescheduleAppId) {
+                document.querySelector('.page-header h1').textContent = 'Reschedule Appointment';
+                document.querySelector('.page-header p').textContent = 'Update your visit details';
+            }
+            
+            // Auto fill active user
+            if (isAuthenticated()) {
+                const userData = JSON.parse(localStorage.getItem('userData') || sessionStorage.getItem('userData'));
+                if (userData) {
+                    document.getElementById('firstName').value = userData.first_name || '';
+                    document.getElementById('lastName').value = userData.last_name || '';
+                    document.getElementById('email').value = userData.email || '';
+                    document.getElementById('phone').value = userData.phone || '';
+                }
+            }
+            
+            try {
+                allDoctorsData = await api.doctors.list();
+                const selectElement = document.getElementById('doctorSelect');
+                selectElement.innerHTML = '';
+                
+                if(allDoctorsData.length === 0) {
+                    selectElement.innerHTML = '<option value="">No doctors available</option>';
+                    return;
+                }
+                
+                allDoctorsData.forEach((doc) => {
+                    const docName = `Dr. ${doc.full_name || 'Network Doctor'} - ${doc.specialization_display || doc.specialization || 'General'}`;
+                    const opt = document.createElement('option');
+                    opt.value = doc.id;
+                    opt.textContent = docName;
+                    selectElement.appendChild(opt);
+                });
+
+                // Check if doctor is pre-selected by ID from previous page
+                const preSelectedDoctor = localStorage.getItem('selectedDoctorId');
+                if (preSelectedDoctor) {
+                    selectElement.value = preSelectedDoctor;
+                    localStorage.removeItem('selectedDoctorId');
+                }
+                
+                // If rescheduling, fetch appointment details to override selections
+                if (rescheduleAppId && isAuthenticated()) {
+                    try {
+                        const myApps = await api.appointments.list();
+                        const targetApp = myApps.find(a => String(a.id) === String(rescheduleAppId));
+                        if(targetApp) {
+                            selectElement.value = targetApp.doctor?.id || targetApp.doctor;
+                            
+                            // Select matching date tab if it is within 7 days
+                            const appDate = targetApp.appointment_date;
+                            const dateObj = document.querySelector(`.date-option[data-date="${appDate}"]`);
+                            if (dateObj) {
+                                document.querySelectorAll('.date-option').forEach(opt => opt.classList.remove('selected'));
+                                dateObj.classList.add('selected');
+                                selectedDate = appDate;
+                            }
+                            
+                            // Reason/Symptoms
+                            document.getElementById('reason').value = targetApp.symptoms || '';
+                            if(targetApp.symptoms) {
+                                const syms = targetApp.symptoms.split(', ');
+                                document.querySelectorAll('.symptom-tag').forEach(tag => {
+                                    if(syms.includes(tag.textContent)) tag.classList.add('selected');
+                                });
+                            }
+                        }
+                    } catch(e) { console.error('Error fetching reschedule data', e); }
+                }
+
+                // Trigger change event to set names properly
+                selectElement.dispatchEvent(new Event('change'));
+            } catch (err) {
+                console.error("Failed loading doctors", err);
+                alert("It looks like your Django backend server isn't running! Please turn it on.\\nError details: " + err.message);
             }
 
             // Set default date
@@ -783,28 +1141,88 @@
 
         // Doctor selection
         document.getElementById('doctorSelect').addEventListener('change', function() {
-            selectedDoctor = this.value;
-            document.getElementById('doctorName').textContent = selectedDoctor;
-        });
-
-        // Date selection
-        document.querySelectorAll('.date-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.date-option').forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedDate = this.dataset.date;
+            selectedDoctorId = this.value;
+            const docObj = allDoctorsData.find(d => d.id == selectedDoctorId);
+            if(docObj) {
+                selectedDoctor = `Dr. ${docObj.full_name || ''}`;
+                document.getElementById('doctorName').textContent = selectedDoctor;
+                document.getElementById('doctorSpecialty').textContent = `${docObj.specialization_display || docObj.specialization || 'General'} • Medical Center`;
                 updateTimeSlots();
-            });
+            }
         });
 
-        // Time slot selection
-        document.querySelectorAll('.time-slot:not(.disabled)').forEach(slot => {
-            slot.addEventListener('click', function() {
-                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedTime = this.dataset.time;
-            });
-        });
+        async function updateTimeSlots() {
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            timeSlotsContainer.innerHTML = '<div class="py-3 text-muted w-100 text-center" style="grid-column: 1/-1;">Loading available times...</div>';
+            selectedTime = ''; // Reset selected time
+
+            if (!selectedDoctorId) return;
+
+            const docObj = allDoctorsData.find(d => d.id == selectedDoctorId);
+            if (!docObj || !docObj.availabilities || docObj.availabilities.length === 0) {
+                timeSlotsContainer.innerHTML = '<div class="py-3 text-muted w-100 text-center" style="grid-column: 1/-1;">No schedule template available for this doctor yet.</div>';
+                return;
+            }
+
+            const dateObj = new Date(selectedDate);
+            // JS getDay(): 0=Sunday, 1=Monday ... 6=Saturday
+            // Django Backend: 0=Monday, 1=Tuesday ... 6=Sunday
+            let jsDay = dateObj.getDay();
+            let djangoDay = (jsDay === 0) ? 6 : jsDay - 1;
+
+            const avail = docObj.availabilities.find(a => a.day_of_week === djangoDay);
+            if (!avail || !avail.is_available) {
+                timeSlotsContainer.innerHTML = '<div class="py-3 text-danger w-100 text-center" style="grid-column: 1/-1;">Doctor is not available on this date.</div>';
+                return;
+            }
+            
+            // Query backend for already booked slots on this specific day!
+            let bookedSlots = [];
+            try {
+                const response = await api.doctors.getBookedSlots(selectedDoctorId, selectedDate);
+                bookedSlots = response.booked_slots || [];
+            } catch(e) {
+                console.error("Could not fetch blocked slots: ", e);
+            }
+
+            timeSlotsContainer.innerHTML = '';
+            const startH = parseInt(avail.start_time.split(':')[0]);
+            const endH = parseInt(avail.end_time.split(':')[0]);
+            
+            let htmlCount = 0;
+            for (let h = startH; h < endH; h++) {
+                ['00', '30'].forEach(min => {
+                    const timeStr = `${h.toString().padStart(2, '0')}:${min}`;
+                    const displayHour = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    const displayStr = `${displayHour}:${min} ${ampm}`;
+
+                    // Check if timeStr matches any slot in the array returned by backend
+                    const isAvailable = !bookedSlots.includes(timeStr);
+
+                    const timeSlot = document.createElement('div');
+                    timeSlot.className = 'time-slot' + (!isAvailable ? ' disabled bg-light' : '');
+                    timeSlot.dataset.time = timeStr;
+                    timeSlot.innerHTML = `
+                        <div class="time">${displayStr}</div>
+                        <div class="status">${isAvailable ? 'Available' : 'Booked'}</div>
+                    `;
+                    
+                    if (isAvailable) {
+                        timeSlot.addEventListener('click', function() {
+                            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                            this.classList.add('selected');
+                            selectedTime = this.dataset.time;
+                        });
+                    }
+                    timeSlotsContainer.appendChild(timeSlot);
+                    htmlCount++;
+                });
+            }
+            if (htmlCount === 0) {
+                timeSlotsContainer.innerHTML = '<div class="py-3 text-muted w-100 text-center" style="grid-column: 1/-1;">No available time slots.</div>';
+            }
+        }
 
         // Symptom selection
         document.querySelectorAll('.symptom-tag').forEach(tag => {
@@ -821,18 +1239,54 @@
             });
         }
 
-        function updateTimeSlots() {
-            // In a real application, this would fetch available time slots for the selected date
-            console.log('Updating time slots for:', selectedDate);
-        }
-
         // Form submission
-        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+        document.getElementById('appointmentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Validate all required fields
             if (validateForm()) {
-                showSuccessModal();
+                // Check authentication
+                if (!isAuthenticated()) {
+                    alert('Please login to book an appointment.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = document.getElementById('submitBtn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Booking...';
+                submitBtn.disabled = true;
+
+                try {
+                    // Get selected symptoms
+                    selectedSymptoms = [];
+                    document.querySelectorAll('.symptom-tag.selected').forEach(tag => {
+                        selectedSymptoms.push(tag.textContent);
+                    });
+
+                    // Prepare appointment data
+                    const appointmentData = {
+                        doctor: selectedDoctorId,
+                        appointment_date: selectedDate,
+                        appointment_time: selectedTime,
+                        symptoms: selectedSymptoms.join(', ')
+                    };
+
+                    // Call backend API
+                    if (rescheduleAppId) {
+                        await api.appointments.patch(rescheduleAppId, appointmentData);
+                    } else {
+                        await api.appointments.create(appointmentData);
+                    }
+                    
+                    showSuccessModal();
+                } catch (error) {
+                    alert('Failed to book appointment: ' + (error.message || 'Please try again.'));
+                } finally {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
             }
         });
 
@@ -860,18 +1314,21 @@
         }
 
         function showSuccessModal() {
-            // Update confirmation details
-            const confirmationDetails = document.getElementById('confirmationDetails');
-            confirmationDetails.innerHTML = `
-                <p><strong>Doctor:</strong> ${selectedDoctor}</p>
-                <p><strong>Date:</strong> ${formatDate(selectedDate)}</p>
-                <p><strong>Time:</strong> ${formatTime(selectedTime)}</p>
-                <p><strong>Patient:</strong> ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}</p>
-                <p><strong>Email:</strong> ${document.getElementById('email').value}</p>
-                <p><strong>Phone:</strong> ${document.getElementById('phone').value}</p>
-                <p><strong>Reason:</strong> ${document.getElementById('reason').value}</p>
-                ${selectedSymptoms.length > 0 ? `<p><strong>Symptoms:</strong> ${selectedSymptoms.join(', ')}</p>` : ''}
+            // Populate modal details
+            const modalDetails = document.getElementById('modalDetails');
+            modalDetails.innerHTML = `
+                <div class="mb-2"><strong class="text-dark">Doctor:</strong> ${selectedDoctor}</div>
+                <div class="mb-2"><strong class="text-dark">Date:</strong> ${formatDate(selectedDate)}</div>
+                <div class="mb-2"><strong class="text-dark">Time:</strong> ${formatTime(selectedTime)}</div>
+                <div class="mb-2"><strong class="text-dark">Patient:</strong> ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}</div>
+                ${selectedSymptoms.length > 0 ? `<div class="mb-1"><strong class="text-dark">Symptoms:</strong> ${selectedSymptoms.join(', ')}</div>` : ''}
             `;
+
+            // Setup correct messaging if rescheduled
+            if (rescheduleAppId) {
+                document.getElementById('successModalTitle').textContent = 'Appointment Rescheduled Successfully!';
+                document.getElementById('successModalSubtitle').textContent = 'Your appointment has been perfectly updated.';
+            }
 
             // Show modal
             document.getElementById('successModal').style.display = 'flex';
@@ -879,8 +1336,12 @@
 
         function closeSuccessModal() {
             document.getElementById('successModal').style.display = 'none';
-            // Redirect to home page
-            window.location.href = 'index.html';
+            // Redirect to appropriate dashboard based on user role
+            if (typeof redirectToDashboard === 'function') {
+                redirectToDashboard();
+            } else {
+                window.location.href = 'patient-dashboard.html';
+            }
         }
 
         function formatDate(dateString) {
@@ -924,6 +1385,21 @@
             const submitBtn = document.getElementById('submitBtn');
             if (currentStep === 4) {
                 submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Confirm Appointment';
+                submitBtn.type = 'submit';
+                submitBtn.onclick = null;
+                
+                // Populate Step 4 review screen immediately
+                const confirmationDetails = document.getElementById('confirmationDetails');
+                confirmationDetails.innerHTML = `
+                    <p><strong>Doctor:</strong> ${selectedDoctor}</p>
+                    <p><strong>Date:</strong> ${formatDate(selectedDate)}</p>
+                    <p><strong>Time:</strong> ${formatTime(selectedTime)}</p>
+                    <p><strong>Patient:</strong> ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}</p>
+                    <p><strong>Email:</strong> ${document.getElementById('email').value}</p>
+                    <p><strong>Phone:</strong> ${document.getElementById('phone').value}</p>
+                    <p><strong>Reason:</strong> ${document.getElementById('reason').value}</p>
+                    ${selectedSymptoms.length > 0 ? `<p><strong>Symptoms:</strong> ${selectedSymptoms.join(', ')}</p>` : ''}
+                `;
             } else {
                 submitBtn.innerHTML = '<i class="bi bi-arrow-right"></i> Next';
                 submitBtn.type = 'button';

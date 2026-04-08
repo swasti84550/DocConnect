@@ -10,16 +10,27 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         :root {
             --primary-blue: #0066cc;
+            --primary-light: #0088ff;
             --light-blue: #e6f2ff;
             --dark-blue: #004499;
-            --text-dark: #333333;
+            --text-dark: #1a1a2e;
             --text-light: #666666;
             --border-color: #e0e0e0;
+            --success-green: #28a745;
+            --warning-orange: #ff9800;
+            --danger-red: #dc3545;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
         }
 
         * {
@@ -32,129 +43,224 @@
             font-family: 'Inter', sans-serif;
             color: var(--text-dark);
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--light-blue);
+            border-top-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Navbar Styles */
         .navbar {
-            background: white !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
             padding: 1rem 0;
             transition: all 0.3s ease;
         }
 
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
         .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: var(--primary-blue) !important;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            font-size: 1.5rem;
         }
 
         .navbar-nav .nav-link {
             color: var(--text-dark) !important;
             font-weight: 500;
             margin: 0 0.5rem;
-            transition: color 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .navbar-nav .nav-link:hover {
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
             color: var(--primary-blue) !important;
+            background: var(--light-blue);
         }
 
         .btn-book-nav {
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             color: white !important;
             border: none;
-            padding: 0.5rem 1.5rem;
+            padding: 0.6rem 1.8rem;
             border-radius: 25px;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-book-nav:hover {
-            background: var(--dark-blue);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white !important;
         }
 
         /* Hero Section */
         .hero-section {
-            padding: 5rem 0;
-            background: linear-gradient(135deg, var(--light-blue) 0%, white 100%);
-            min-height: 80vh;
+            padding: 6rem 0 4rem;
+            background: linear-gradient(135deg, var(--light-blue) 0%, #f0f8ff 50%, white 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,102,204,0.05) 0%, transparent 70%);
+            animation: float 30s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-50px, 50px) rotate(180deg); }
         }
 
         .hero-content h1 {
-            font-size: 3rem;
-            font-weight: 700;
+            font-size: 3.5rem;
+            font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 1.5rem;
-            line-height: 1.2;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-content h1 span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero-content p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-light);
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn-hero-primary {
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 1rem 2.5rem;
             font-size: 1.1rem;
             font-weight: 600;
             border-radius: 30px;
-            margin-right: 1rem;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-hero-primary:hover {
-            background: var(--dark-blue);
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,102,204,0.3);
+            box-shadow: var(--shadow-lg);
+            color: white;
         }
 
         .btn-hero-secondary {
-            background: transparent;
+            background: white;
             color: var(--primary-blue);
             border: 2px solid var(--primary-blue);
-            padding: 1rem 2rem;
+            padding: 1rem 2.5rem;
             font-size: 1.1rem;
             font-weight: 600;
             border-radius: 30px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-hero-secondary:hover {
             background: var(--primary-blue);
             color: white;
             transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
 
         .hero-image {
-            text-align: center;
-        }
-
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
         }
 
         .hero-image-placeholder {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: var(--gradient-dark);
+            border-radius: 30px;
+            box-shadow: var(--shadow-lg);
             padding: 3rem;
-            height: 400px;
+            height: 500px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image-placeholder:hover {
+            transform: perspective(1000px) rotateY(0deg);
         }
 
         .hero-image-placeholder::before {
@@ -168,11 +274,6 @@
             animation: float 20s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(-30px, -30px) rotate(180deg); }
-        }
-
         .hero-image-content {
             position: relative;
             z-index: 1;
@@ -181,208 +282,452 @@
         }
 
         .hero-image-content i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
             opacity: 0.9;
+            display: block;
         }
 
         .hero-image-content h3 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
         }
 
         .hero-image-content p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            opacity: 0.85;
+            margin-bottom: 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .hero-stat-item {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
             opacity: 0.8;
-            margin-bottom: 0;
         }
 
         /* Features Section */
         .features-section {
-            padding: 5rem 0;
+            padding: 6rem 0;
             background: white;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
         }
 
         .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 3rem;
+            font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 1rem;
+            letter-spacing: -0.02em;
         }
 
         .section-subtitle {
-            text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--text-light);
-            margin-bottom: 3rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .feature-card {
             background: white;
             border: 1px solid var(--border-color);
-            border-radius: 15px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 2.5rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border-color: var(--primary-blue);
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+            border-color: transparent;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
 
         .feature-icon {
-            font-size: 3rem;
+            width: 80px;
+            height: 80px;
+            background: var(--light-blue);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--gradient-primary);
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
             color: var(--primary-blue);
-            margin-bottom: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon i {
+            color: white;
         }
 
         .feature-card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 1rem;
         }
 
         .feature-card p {
             color: var(--text-light);
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 1rem;
         }
 
         /* How It Works Section */
         .how-it-works {
-            padding: 5rem 0;
-            background: var(--light-blue);
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--light-blue) 0%, #f0f8ff 100%);
         }
 
         .step-card {
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem;
+            position: relative;
         }
 
         .step-number {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-blue);
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 auto 2rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-card::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            width: 100%;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .step-card:last-child::after {
+            display: none;
         }
 
         .step-card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 1rem;
         }
 
         .step-card p {
             color: var(--text-light);
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 1.05rem;
         }
 
-        /* Location Section */
-        .location-section {
-            padding: 5rem 0;
+        /* Testimonials Section */
+        .testimonials-section {
+            padding: 6rem 0;
             background: white;
         }
 
-        .map-container {
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            height: 400px;
+        .testimonial-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
         }
 
-        .map-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .testimonial-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        .testimonial-stars {
+            color: var(--warning-orange);
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-role {
+            font-size: 0.9rem;
+            color: var(--text-light);
         }
 
         /* CTA Section */
         .cta-section {
-            padding: 5rem 0;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            padding: 6rem 0;
+            background: var(--gradient-dark);
             color: white;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 25s ease-in-out infinite;
         }
 
         .cta-section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
         }
 
         .btn-cta {
             background: white;
             color: var(--primary-blue);
             border: none;
-            padding: 1rem 3rem;
+            padding: 1.2rem 3.5rem;
             font-size: 1.2rem;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 30px;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-cta:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(255,255,255,0.3);
+            box-shadow: var(--shadow-lg);
+            color: var(--primary-blue);
         }
 
         /* Footer */
         footer {
             background: var(--text-dark);
             color: white;
-            padding: 3rem 0 1rem;
-            text-align: center;
+            padding: 4rem 0 2rem;
         }
 
-        .footer-content {
-            margin-bottom: 2rem;
-        }
-
-        .footer-content h5 {
-            font-size: 1.2rem;
-            font-weight: 600;
+        .footer-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .footer-content p {
+        .footer-description {
             color: #cccccc;
-            margin-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .footer-heading {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-link {
+            display: block;
+            color: #cccccc;
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #cccccc;
+        }
+
+        .footer-contact-item i {
+            color: var(--primary-light);
+            margin-top: 3px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px);
         }
 
         .footer-bottom {
-            border-top: 1px solid #555555;
-            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            margin-top: 3rem;
             color: #999999;
+            text-align: center;
         }
 
         /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero-image-placeholder {
+                height: 400px;
+                transform: perspective(1000px) rotateY(0deg);
+            }
+            
+            .step-card::after {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
+            .hero-section {
+                padding: 4rem 0 2rem;
+                min-height: auto;
+            }
+            
             .hero-content h1 {
                 font-size: 2rem;
             }
             
             .hero-content p {
-                font-size: 1rem;
+                font-size: 1.1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
             }
             
             .btn-hero-primary, .btn-hero-secondary {
-                display: block;
                 width: 100%;
-                margin-bottom: 1rem;
-                margin-right: 0;
+                justify-content: center;
             }
             
             .section-title {
@@ -390,7 +735,16 @@
             }
             
             .cta-section h2 {
-                font-size: 1.8rem;
+                font-size: 2rem;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .hero-image-placeholder {
+                height: 350px;
             }
         }
 
@@ -399,11 +753,352 @@
             scroll-behavior: smooth;
         }
 
-        /* Animation */
-        @keyframes fadeInUp {
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-blue);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Language Selector & Dark Mode Toggle */
+.nav-extras {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: 1rem;
+}
+
+.language-selector {
+    position: relative;
+}
+
+.language-selector select {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.language-selector select:hover {
+    border-color: var(--primary-blue);
+}
+
+.dark-mode-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-dark);
+}
+
+.dark-mode-toggle:hover {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    --text-dark: #f5f5f5;
+    --text-light: #b0b0b0;
+    --border-color: #3a3a3a;
+    background: #121212;
+}
+
+body.dark-mode .navbar {
+    background: rgba(18, 18, 18, 0.95) !important;
+}
+
+body.dark-mode .feature-card,
+body.dark-mode .step-card,
+body.dark-mode .testimonial-card {
+    background: #1e1e1e;
+    border-color: #3a3a3a;
+}
+
+body.dark-mode .section-title {
+    color: var(--text-dark);
+}
+
+/* FAQ Section */
+        .faq-section {
+            padding: 5rem 0;
+            background: var(--light-blue);
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--light-blue);
+        }
+
+        .faq-question h4 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer-content {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-light);
+        }
+
+        /* Blog Section */
+        .blog-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .blog-image {
+            height: 200px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-category {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .blog-excerpt {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .blog-read-more {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .blog-read-more:hover {
+            color: var(--dark-blue);
+        }
+
+        /* Enhanced Testimonials */
+        .testimonials-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .testimonial-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .testimonial-tab {
+            padding: 0.75rem 2rem;
+            border: 2px solid var(--primary-blue);
+            background: white;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary-blue);
+        }
+
+        .testimonial-tab.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .testimonial-tab:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .doctor-badge {
+            background: var(--success-green);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Live Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            display: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-popup.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -411,14 +1106,109 @@
             }
         }
 
-        .animate-fade-in {
-            animation: fadeInUp 0.8s ease-out;
+        .chat-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .chat-body {
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+        }
+
+        .chat-message.bot {
+            text-align: left;
+        }
+
+        .chat-message.user {
+            text-align: right;
+        }
+
+        .chat-bubble {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .chat-message.bot .chat-bubble {
+            background: var(--light-blue);
+            color: var(--text-dark);
+        }
+
+        .chat-message.user .chat-bubble {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .chat-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .chat-send {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-blue);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-send:hover {
+            background: var(--dark-blue);
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
     <!-- Navigation Header -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="index.html">
                 <i class="bi bi-hospital"></i> DocConnect
@@ -429,7 +1219,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
+                        <a class="nav-link active" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="doctors.html">Doctors</a>
@@ -444,35 +1234,64 @@
                         <a class="nav-link" href="login.html">Login</a>
                     </li>
                     <li class="nav-item ms-2">
-                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'">Book Now</button>
+                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'">
+                            <i class="bi bi-calendar-check"></i> Book Now
+                        </button>
                     </li>
                 </ul>
+                <div class="nav-extras">
+                    <div class="language-selector">
+                        <select id="languageSelect">
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </div>
+                    <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle Dark Mode">
+                        <i class="bi bi-moon"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero-section">
+    <section class="hero-section">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6 hero-content animate-fade-in">
-                    <h1>Connect with Trusted Doctors Anytime, Anywhere</h1>
-                    <p>Smart time-slot based appointment booking with real-time availability</p>
+                <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
+                    <h1>Connect with <span>Trusted Doctors</span> Anytime, Anywhere</h1>
+                    <p>Experience the future of healthcare with smart time-slot based appointment booking, real-time availability, and seamless doctor-patient communication.</p>
                     <div class="hero-buttons">
-                        <button class="btn btn-hero-primary">
+                        <button class="btn btn-hero-primary" onclick="window.location.href='appointment.html'">
                             <i class="bi bi-calendar-check"></i> Book Appointment
                         </button>
-                        <button class="btn btn-hero-secondary">
-                            <i class="bi bi-person-circle"></i> Doctor Login
+                        <button class="btn btn-hero-secondary" onclick="window.location.href='doctors.html'">
+                            <i class="bi bi-people"></i> Find Doctors
                         </button>
                     </div>
                 </div>
-                <div class="col-lg-6 hero-image">
+                <div class="col-lg-6 hero-image" data-aos="fade-left" data-aos-duration="1000">
                     <div class="hero-image-placeholder">
                         <div class="hero-image-content">
-                            <i class="bi bi-hospital"></i>
-                            <h3>Doctor Consultation</h3>
-                            <p>Expert medical care at your fingertips</p>
+                            <i class="bi bi-heart-pulse"></i>
+                            <h3>Expert Care</h3>
+                            <p>Professional medical consultation at your fingertips</p>
+                            <div class="hero-stats">
+                                <div class="hero-stat-item">
+                                    <span class="hero-stat-number">10K+</span>
+                                    <span class="hero-stat-label">Patients</span>
+                                </div>
+                                <div class="hero-stat-item">
+                                    <span class="hero-stat-number">500+</span>
+                                    <span class="hero-stat-label">Doctors</span>
+                                </div>
+                                <div class="hero-stat-item">
+                                    <span class="hero-stat-number">50K+</span>
+                                    <span class="hero-stat-label">Appointments</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -481,46 +1300,48 @@
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="features-section">
+    <section class="features-section" id="features">
         <div class="container">
-            <h2 class="section-title">Why Choose DocConnect?</h2>
-            <p class="section-subtitle">Experience the future of healthcare appointment booking</p>
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Why Choose DocConnect?</h2>
+                <p class="section-subtitle">Experience the future of healthcare appointment booking with our cutting-edge features</p>
+            </div>
             
             <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="bi bi-clock-history"></i>
                         </div>
                         <h3>Smart Time-Slot Booking</h3>
-                        <p>Intelligent scheduling system that shows real-time availability and helps you find the perfect time slot.</p>
+                        <p>Intelligent scheduling system that shows real-time availability and helps you find the perfect time slot instantly.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="bi bi-clipboard-check"></i>
                         </div>
-                        <h3>Appointment Status Tracking</h3>
-                        <p>Stay updated with real-time notifications about your appointment status and any changes.</p>
+                        <h3>Status Tracking</h3>
+                        <p>Stay updated with real-time notifications about your appointment status and any changes via email and SMS.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="bi bi-geo-alt"></i>
                         </div>
-                        <h3>Google Maps Integration</h3>
-                        <p>Easily locate clinics and hospitals with integrated maps and navigation assistance.</p>
+                        <h3>Maps Integration</h3>
+                        <p>Easily locate clinics and hospitals with integrated Google Maps and turn-by-turn navigation assistance.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="bi bi-envelope-check"></i>
                         </div>
-                        <h3>Automated Confirmation</h3>
-                        <p>Receive instant confirmations and reminders via email and SMS for your appointments.</p>
+                        <h3>Automated Confirmations</h3>
+                        <p>Receive instant confirmations and automated reminders for your appointments to never miss a visit.</p>
                     </div>
                 </div>
             </div>
@@ -528,30 +1349,32 @@
     </section>
 
     <!-- How It Works Section -->
-    <section id="how-it-works" class="how-it-works">
+    <section class="how-it-works" id="how-it-works">
         <div class="container">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">Book your appointment in three simple steps</p>
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Book your appointment in three simple steps</p>
+            </div>
             
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <h3>Search Doctor</h3>
                         <p>Browse through our network of qualified doctors and specialists. Filter by specialty, location, or availability.</p>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="step-card">
                         <div class="step-number">2</div>
-                        <h3>Select Available Time Slot</h3>
+                        <h3>Select Time Slot</h3>
                         <p>View real-time availability and choose the time slot that works best for you. No more back-and-forth calls.</p>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="step-card">
                         <div class="step-number">3</div>
-                        <h3>Get Instant Confirmation</h3>
+                        <h3>Get Confirmation</h3>
                         <p>Receive immediate confirmation with all appointment details. Get reminders as your appointment approaches.</p>
                     </div>
                 </div>
@@ -559,20 +1382,268 @@
         </div>
     </section>
 
-    <!-- Location Section -->
-    <section id="location" class="location-section">
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
         <div class="container">
-            <h2 class="section-title">Find Us Easily</h2>
-            <p class="section-subtitle">Conveniently located with easy access from major areas</p>
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">What Our Community Says</h2>
+                <p class="section-subtitle">Read testimonials from our satisfied patients and doctors</p>
+            </div>
             
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="map-container">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.897832822!2d90.390442315442!3d23.751287984587!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b7b5b5b5b5%3A0x5b5b5b5b5b5b5b5b!2sBangladesh%20Medical%20College%20Hospital!5e0!3m2!1sen!2sbd!4v1234567890"
-                            allowfullscreen="" 
-                            loading="lazy">
-                        </iframe>
+            <div class="testimonial-tabs" data-aos="fade-up" data-aos-delay="100">
+                <button class="testimonial-tab active" data-tab="patients">Patients</button>
+                <button class="testimonial-tab" data-tab="doctors">Doctors</button>
+            </div>
+            
+            <div id="patientTestimonials" class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="testimonial-text">"DocConnect made booking appointments so easy! The real-time availability feature saved me so much time."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">SM</div>
+                            <div>
+                                <div class="testimonial-name">Sarah Mitchell</div>
+                                <div class="testimonial-role">Patient</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="testimonial-text">"The automated reminders are fantastic! I never miss an appointment anymore. Highly recommended!"</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">JD</div>
+                            <div>
+                                <div class="testimonial-name">John Davis</div>
+                                <div class="testimonial-role">Patient</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                        </div>
+                        <p class="testimonial-text">"Finally, a healthcare platform that actually works! The interface is intuitive and the booking process is seamless."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">EW</div>
+                            <div>
+                                <div class="testimonial-name">Emily Watson</div>
+                                <div class="testimonial-role">Patient</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="doctorTestimonials" class="row g-4" style="display: none;">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="testimonial-text">"DocConnect has transformed my practice. I can manage appointments efficiently and connect with patients seamlessly."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">SJ</div>
+                            <div>
+                                <div class="testimonial-name">Dr. Sarah Johnson <span class="doctor-badge">Doctor</span></div>
+                                <div class="testimonial-role">Cardiologist</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="testimonial-text">"The platform's intuitive design helps me focus on patient care rather than administrative tasks. Highly recommended for doctors."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">MC</div>
+                            <div>
+                                <div class="testimonial-name">Dr. Michael Chen <span class="doctor-badge">Doctor</span></div>
+                                <div class="testimonial-role">Dermatologist</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="testimonial-text">"DocConnect has helped me grow my practice by 40%. The patient management tools are exceptional and easy to use."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">RP</div>
+                            <div>
+                                <div class="testimonial-name">Dr. Rachel Parker <span class="doctor-badge">Doctor</span></div>
+                                <div class="testimonial-role">Pediatrician</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Find answers to common questions about DocConnect</p>
+            </div>
+            
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                <div class="faq-question">
+                    <h4>How do I book an appointment on DocConnect?</h4>
+                    <i class="bi bi-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Simply browse our doctor listings, select your preferred doctor, choose an available time slot, and confirm your booking. You'll receive instant confirmation via email and SMS.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="faq-question">
+                    <h4>Is DocConnect free to use for patients?</h4>
+                    <i class="bi bi-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, DocConnect is completely free for patients. There are no booking fees or hidden charges. You only pay the doctor's consultation fee as usual.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                <div class="faq-question">
+                    <h4>How do doctors join DocConnect?</h4>
+                    <i class="bi bi-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Doctors can sign up through our registration process. After verifying their medical credentials, they can create their profile, set their availability, and start accepting appointments.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+                <div class="faq-question">
+                    <h4>Can I cancel or reschedule my appointment?</h4>
+                    <i class="bi bi-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, you can cancel or reschedule your appointment through your patient dashboard. Please provide at least 24 hours notice for cancellations to avoid any inconvenience to the doctor.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+                <div class="faq-question">
+                    <h4>Is my medical information secure on DocConnect?</h4>
+                    <i class="bi bi-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Absolutely. We use industry-standard encryption and security measures to protect your personal and medical information. Your data is never shared with third parties without your consent.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="blog-section" id="blog">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Healthcare Insights</h2>
+                <p class="section-subtitle">Stay informed with the latest healthcare news and tips</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="blog-card">
+                        <div class="blog-image">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
+                        <div class="blog-content">
+                            <span class="blog-category">Wellness</span>
+                            <h3 class="blog-title">10 Tips for Maintaining a Healthy Lifestyle</h3>
+                            <p class="blog-excerpt">Discover simple habits that can significantly improve your overall health and well-being.</p>
+                            <div class="blog-meta">
+                                <span><i class="bi bi-calendar"></i> Jan 15, 2024</span>
+                                <a href="blog-detail-1.html" class="blog-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="blog-card">
+                        <div class="blog-image">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div class="blog-content">
+                            <span class="blog-category">Prevention</span>
+                            <h3 class="blog-title">The Importance of Regular Health Checkups</h3>
+                            <p class="blog-excerpt">Learn why preventive care and regular screenings are crucial for early detection.</p>
+                            <div class="blog-meta">
+                                <span><i class="bi bi-calendar"></i> Jan 12, 2024</span>
+                                <a href="blog-detail-2.html" class="blog-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="blog-card">
+                        <div class="blog-image">
+                            <i class="bi bi-camera-video"></i>
+                        </div>
+                        <div class="blog-content">
+                            <span class="blog-category">Telemedicine</span>
+                            <h3 class="blog-title">Benefits of Virtual Consultations</h3>
+                            <p class="blog-excerpt">Explore how telemedicine is making healthcare more accessible and convenient.</p>
+                            <div class="blog-meta">
+                                <span><i class="bi bi-calendar"></i> Jan 10, 2024</span>
+                                <a href="blog-detail-3.html" class="blog-read-more">Read More</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -580,12 +1651,12 @@
     </section>
 
     <!-- Call to Action Section -->
-    <section id="cta" class="cta-section">
+    <section class="cta-section" id="cta">
         <div class="container">
             <h2>Your Health, Just One Click Away</h2>
-            <p class="lead mb-4">Join thousands of satisfied patients who trust DocConnect for their healthcare needs</p>
-            <button class="btn btn-cta">
-                <i class="bi bi-arrow-right-circle"></i> Get Started
+            <p>Join thousands of satisfied patients who trust DocConnect for their healthcare needs</p>
+            <button class="btn btn-cta" onclick="window.location.href='signup.html'">
+                <i class="bi bi-arrow-right-circle"></i> Get Started Free
             </button>
         </div>
     </section>
@@ -593,23 +1664,131 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <h5>Contact Us</h5>
-                <p><i class="bi bi-envelope"></i> info@docconnect.com</p>
-                <p><i class="bi bi-telephone"></i> +1 (555) 123-4567</p>
-                <p><i class="bi bi-geo-alt"></i> 123 Medical Center Drive, Healthcare City, HC 12345</p>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <i class="bi bi-hospital"></i> DocConnect
+                    </div>
+                    <p class="footer-description">Transforming healthcare appointment booking with smart technology and seamless user experience. Your health, our priority.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="doctors.html" class="footer-link">Find Doctors</a>
+                    <a href="appointment.html" class="footer-link">Book Appointment</a>
+                    <a href="contact.html" class="footer-link">Contact Us</a>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="footer-heading">Account</h5>
+                    <a href="login.html" class="footer-link">Login</a>
+                    <a href="signup.html" class="footer-link">Sign Up</a>
+                    <a href="patient-dashboard.html" class="footer-link">Patient Dashboard</a>
+                    <a href="doctor-dashboard.html" class="footer-link">Doctor Dashboard</a>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="footer-heading">Contact Us</h5>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-envelope"></i>
+                        <span>info@docconnect.com</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-telephone"></i>
+                        <span>+1 (555) 123-4567</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>123 Medical Center Drive, Healthcare City, HC 12345</span>
+                    </div>
+                </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 DocConnect. All Rights Reserved.</p>
+                <p>&copy; 2026 DocConnect. All Rights Reserved. | <a href="#" style="color: #999999;">Privacy Policy</a> | <a href="#" style="color: #999999;">Terms of Service</a></p>
             </div>
         </div>
     </footer>
 
+    <!-- Live Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <h4><i class="bi bi-chat-dots"></i> Live Support</h4>
+                <button class="chat-close" id="chatClose">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="chat-message bot">
+                    <div class="chat-bubble">
+                        Hello! How can I help you today?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
+                <button class="chat-send" id="chatSend">
+                    <i class="bi bi-send"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-button" id="chatButton">
+            <i class="bi bi-chat-dots"></i>
+        </div>
+    </div>
+
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 500);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('backToTop');
+            
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Back to Top button
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -617,42 +1796,154 @@
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                        behavior: 'smooth'
                     });
                 }
             });
         });
 
-        // Add scroll effect to navbar
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.style.padding = '0.5rem 0';
-                navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+        // Language Selector
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            const selectedLang = this.value;
+            // In a real app, this would switch the language
+            console.log('Language changed to:', selectedLang);
+            alert('Language changed to: ' + this.options[this.selectedIndex].text);
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('bi-moon');
+                icon.classList.add('bi-sun');
             } else {
-                navbar.style.padding = '1rem 0';
-                navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                icon.classList.remove('bi-sun');
+                icon.classList.add('bi-moon');
             }
         });
 
-        // Add animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        // Testimonials Tab Switching
+        const testimonialTabs = document.querySelectorAll('.testimonial-tab');
+        const patientTestimonials = document.getElementById('patientTestimonials');
+        const doctorTestimonials = document.getElementById('doctorTestimonials');
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-fade-in');
+        testimonialTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                testimonialTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                const tabType = this.dataset.tab;
+                if (tabType === 'patients') {
+                    patientTestimonials.style.display = 'block';
+                    doctorTestimonials.style.display = 'none';
+                } else {
+                    patientTestimonials.style.display = 'none';
+                    doctorTestimonials.style.display = 'block';
                 }
             });
-        }, observerOptions);
+        });
 
-        // Observe all feature cards and step cards
-        document.querySelectorAll('.feature-card, .step-card').forEach(card => {
-            observer.observe(card);
+        // FAQ Accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', function() {
+                const isActive = item.classList.contains('active');
+                
+                // Close all other items
+                faqItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                });
+
+                // Toggle current item
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Live Chat Widget
+        const chatButton = document.getElementById('chatButton');
+        const chatPopup = document.getElementById('chatPopup');
+        const chatClose = document.getElementById('chatClose');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const chatBody = document.getElementById('chatBody');
+
+        chatButton.addEventListener('click', function() {
+            chatPopup.classList.toggle('active');
+        });
+
+        chatClose.addEventListener('click', function() {
+            chatPopup.classList.remove('active');
+        });
+
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                // Add user message
+                const userMessage = document.createElement('div');
+                userMessage.className = 'chat-message user';
+                userMessage.innerHTML = '<div class="chat-bubble">' + message + '</div>';
+                chatBody.appendChild(userMessage);
+
+                // Clear input
+                chatInput.value = '';
+
+                // Scroll to bottom
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                // Show typing indicator
+                const typingMessage = document.createElement('div');
+                typingMessage.className = 'chat-message bot typing-indicator';
+                typingMessage.innerHTML = '<div class="chat-bubble"><i>Thinking...</i></div>';
+                chatBody.appendChild(typingMessage);
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                // Query the smart Django backend
+                fetch('http://127.0.0.1:8000/api/chatbot/ask/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove typing indicator
+                    chatBody.removeChild(typingMessage);
+                    
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'chat-message bot';
+                    botMessage.innerHTML = '<div class="chat-bubble">' + (data.reply || "I didn't quite catch that.") + '</div>';
+                    chatBody.appendChild(botMessage);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                })
+                .catch(err => {
+                    chatBody.removeChild(typingMessage);
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'chat-message bot';
+                    botMessage.innerHTML = '<div class="chat-bubble text-danger">Sorry, my connection to the clinic is interrupted right now!</div>';
+                    chatBody.appendChild(botMessage);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                });
+            }
+        }
+
+        // Add hover effect to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
         });
     </script>
 </body>

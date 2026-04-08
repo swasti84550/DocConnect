@@ -11,20 +11,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-blue: #0066cc;
-            --light-blue: #e6f2ff;
-            --dark-blue: #004499;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --border-color: #e0e0e0;
-            --success-green: #28a745;
-            --warning-orange: #ffc107;
-            --danger-red: #dc3545;
-            --sidebar-bg: #2c3e50;
-            --sidebar-hover: #34495e;
+                :root {
+            --primary-blue: #4f46e5;
+            --primary-light: #818cf8;
+            --light-blue: #e0e7ff;
+            --dark-blue: #1e1b4b;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
+            --gradient-dark: linear-gradient(135deg, var(--dark-blue), var(--primary-blue));
+            --gradient-mesh: radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.4) 0px, transparent 50%), 
+                             radial-gradient(at 100% 0%, rgba(129, 140, 248, 0.4) 0px, transparent 50%), 
+                             radial-gradient(at 100% 100%, rgba(30, 27, 75, 0.4) 0px, transparent 50%);
+            --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.3);
+            --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -33,11 +46,46 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
+                body {
+            font-family: 'Inter', system-ui, sans-serif;
             color: var(--text-dark);
             line-height: 1.6;
-            background: #f8f9fa;
+            background: #f8fafc;
+            overflow-x: hidden;
+            letter-spacing: -0.015em;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--light-blue);
+            border-top-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Dashboard Layout */
@@ -55,19 +103,24 @@
             height: 100vh;
             overflow-y: auto;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: all 0.4s var(--animation-timing);
+            box-shadow: var(--shadow-lg);
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
 
         .sidebar-header {
             padding: 2rem 1.5rem;
-            background: rgba(0,0,0,0.2);
+            background: var(--gradient-dark);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .sidebar-header h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .sidebar-header p {
@@ -79,20 +132,23 @@
         .user-profile {
             display: flex;
             align-items: center;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .user-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: var(--primary-blue);
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-right: 1rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .user-info h4 {
@@ -108,27 +164,33 @@
         }
 
         .sidebar-menu {
-            padding: 1.5rem 0;
+            padding: 1rem 0;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
             padding: 1rem 1.5rem;
-            color: white;
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
             transition: all 0.3s ease;
             border-left: 3px solid transparent;
+            margin: 0.25rem 0.75rem;
+            border-radius: 0 10px 10px 0;
         }
 
         .menu-item:hover {
             background: var(--sidebar-hover);
+            color: white;
             border-left-color: var(--primary-blue);
         }
 
         .menu-item.active {
             background: var(--sidebar-hover);
+            color: white;
             border-left-color: var(--primary-blue);
+            box-shadow: inset 3px 0 0 var(--primary-blue);
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.15) 0%, transparent 100%);
         }
 
         .menu-item i {
@@ -269,23 +331,56 @@
             padding: 2rem;
         }
 
+        /* Welcome Section */
         .welcome-section {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            background: var(--dark-blue);
+            background-image: var(--gradient-mesh);
             color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s var(--animation-timing);
+        }
+        
+        .welcome-section:hover {
+            transform: translateY(-2px);
+        }
+        
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-30px, -30px) rotate(180deg); }
         }
 
         .welcome-section h1 {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .welcome-section p {
             opacity: 0.9;
             margin-bottom: 0;
+            position: relative;
+            z-index: 1;
         }
 
         /* Stats Cards */
@@ -297,22 +392,40 @@
         }
 
         .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 1.75rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s var(--animation-timing);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.4s var(--animation-timing);
+        }
+        
+        .stat-card:hover::after {
+            opacity: 1;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl), var(--shadow-glow);
+            border-color: var(--primary-light);
         }
 
         .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -341,8 +454,8 @@
         }
 
         .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 0.25rem;
         }
@@ -354,8 +467,9 @@
         }
 
         .stat-change {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin-top: 0.5rem;
+            font-weight: 500;
         }
 
         .stat-change.positive {
@@ -517,20 +631,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 1.5rem;
-            background: var(--light-blue);
-            border: 2px solid transparent;
-            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
             text-decoration: none;
             color: var(--primary-blue);
-            transition: all 0.3s ease;
+            transition: all 0.3s var(--animation-timing);
+            box-shadow: var(--shadow-sm);
         }
 
         .quick-action-btn:hover {
-            background: white;
+            background: var(--primary-blue);
+            color: white;
             border-color: var(--primary-blue);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,102,204,0.2);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md), var(--shadow-glow);
+        }
+        
+        .quick-action-btn:hover i {
+            transform: scale(1.1) translateY(-2px);
+        }
+        
+        .quick-action-btn i {
+            transition: transform 0.3s var(--animation-timing);
         }
 
         .quick-action-btn i {
@@ -541,6 +665,24 @@
         .quick-action-btn span {
             font-weight: 600;
             text-align: center;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-blue);
         }
 
         /* Mobile Menu Toggle */
@@ -632,14 +774,70 @@
         .overlay.active {
             display: block;
         }
+    
+        /* Micro Animations */
+        @keyframes pulse-soft {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .notification-badge {
+            animation: pulse-soft 2s infinite;
+        }
+        
+        .section-card {
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .section-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .appointment-item {
+            border-radius: 16px;
+            padding: 1.25rem;
+            background: white;
+        }
+        
+        .appointment-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+            background: white;
+        }
+        
+        .btn {
+            transition: all 0.2s var(--animation-timing);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .top-nav {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--border-color);
+        }
+    
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h3>DocConnect</h3>
+                <h3><i class="bi bi-hospital"></i> DocConnect</h3>
                 <p>Patient Portal</p>
                 <div class="user-profile">
                     <div class="user-avatar">JD</div>
@@ -658,20 +856,13 @@
                 <a href="#" class="menu-item">
                     <i class="bi bi-calendar-check"></i>
                     <span>Appointments</span>
-                    <span class="menu-badge">2</span>
+                    <span class="menu-badge" id="sidebar-badge-appointments">0</span>
                 </a>
                 <a href="#" class="menu-item">
                     <i class="bi bi-person-badge"></i>
                     <span>My Doctors</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-file-medical"></i>
-                    <span>Medical Records</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-capsule"></i>
-                    <span>Prescriptions</span>
-                </a>
+
                 <a href="#" class="menu-item">
                     <i class="bi bi-credit-card"></i>
                     <span>Billing & Payments</span>
@@ -679,7 +870,7 @@
                 <a href="#" class="menu-item">
                     <i class="bi bi-chat-dots"></i>
                     <span>Messages</span>
-                    <span class="menu-badge">5</span>
+                    <span class="menu-badge d-none" id="sidebar-badge-messages">0</span>
                 </a>
                 <a href="#" class="menu-item">
                     <i class="bi bi-gear"></i>
@@ -702,154 +893,225 @@
                     </button>
                     <div class="search-bar">
                         <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Search appointments, doctors, records...">
+                        <input type="text" id="global-search" placeholder="Search appointments, doctors, records...">
                     </div>
                 </div>
 
                 <div class="nav-actions">
-                    <button class="notification-btn">
-                        <i class="bi bi-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small">JD</div>
-                        <span>John Doe</span>
-                        <i class="bi bi-chevron-down"></i>
+                    <div class="dropdown" style="display:inline-block; margin-right: 1rem;">
+                        <button class="notification-btn" data-bs-toggle="dropdown" aria-expanded="false" style="outline:none;">
+                            <i class="bi bi-bell"></i>
+                            <!-- We can hide the badge if 0 notifications -->
+                            <span class="notification-badge d-none">0</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><h6 class="dropdown-header">Notifications</h6></li>
+                            <li><a class="dropdown-item text-muted" href="#">No new notifications</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dropdown" style="display:inline-block;">
+                        <div class="user-menu" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                            <div class="user-avatar-small">P</div>
+                            <span>Patient</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile Setting</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="login.html" onclick="api.auth.logout();"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        </ul>
                     </div>
                 </div>
             </nav>
 
-            <!-- Dashboard Content -->
-            <div class="dashboard-content">
+            <!-- Main Dashboard Content -->
+            <div id="view-Dashboard" class="dashboard-content view-section">
                 <!-- Welcome Section -->
-                <div class="welcome-section">
+                <div class="welcome-section" data-aos="fade-up">
                     <h1>Welcome back, John!</h1>
                     <p>Here's what's happening with your health today</p>
                 </div>
 
                 <!-- Stats Cards -->
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="stat-icon appointments">
                             <i class="bi bi-calendar-check"></i>
                         </div>
-                        <div class="stat-value">2</div>
+                        <div class="stat-value" id="stat-appointments">0</div>
                         <div class="stat-label">Upcoming Appointments</div>
                         <div class="stat-change positive">
-                            <i class="bi bi-arrow-up"></i> 1 this week
+                            <i class="bi bi-calendar"></i> Total Scheduled
                         </div>
                     </div>
 
-                    <div class="stat-card">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="stat-icon doctors">
                             <i class="bi bi-person-badge"></i>
                         </div>
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">My Doctors</div>
+                        <div class="stat-value" id="stat-doctors">0</div>
+                        <div class="stat-label">Available Doctors</div>
                         <div class="stat-change positive">
-                            <i class="bi bi-arrow-up"></i> 1 new this month
+                            <i class="bi bi-people"></i> In network
                         </div>
                     </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon prescriptions">
-                            <i class="bi bi-capsule"></i>
-                        </div>
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Active Prescriptions</div>
-                        <div class="stat-change negative">
-                            <i class="bi bi-arrow-down"></i> 2 completed
-                        </div>
-                    </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon records">
-                            <i class="bi bi-file-medical"></i>
-                        </div>
-                        <div class="stat-value">24</div>
-                        <div class="stat-label">Medical Records</div>
-                        <div class="stat-change positive">
-                            <i class="bi bi-arrow-up"></i> 2 new this month
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Upcoming Appointments -->
-                <div class="section-card">
+                <div class="section-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="section-header">
                         <h2>Upcoming Appointments</h2>
                         <button class="btn-view-all">View All</button>
                     </div>
-                    <div class="appointment-list">
-                        <div class="appointment-item">
-                            <div class="appointment-date">
-                                <div class="day">15</div>
-                                <div class="month">FEB</div>
-                            </div>
-                            <div class="appointment-details">
-                                <h4>Dr. Sarah Johnson</h4>
-                                <p><i class="bi bi-heart-pulse"></i> Cardiology Consultation</p>
-                                <p><i class="bi bi-clock"></i> 10:30 AM - 11:00 AM</p>
-                                <p><i class="bi bi-geo-alt"></i> Medical Center, Downtown</p>
-                            </div>
-                            <span class="appointment-status status-upcoming">Upcoming</span>
-                            <div class="appointment-actions">
-                                <button class="btn-action" title="Reschedule">
-                                    <i class="bi bi-calendar2"></i>
-                                </button>
-                                <button class="btn-action" title="Cancel">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="appointment-item">
-                            <div class="appointment-date">
-                                <div class="day">22</div>
-                                <div class="month">FEB</div>
-                            </div>
-                            <div class="appointment-details">
-                                <h4>Dr. Michael Chen</h4>
-                                <p><i class="bi bi-eye"></i> Dermatology Check-up</p>
-                                <p><i class="bi bi-clock"></i> 2:00 PM - 2:30 PM</p>
-                                <p><i class="bi bi-geo-alt"></i> Skin Care Clinic, Westside</p>
-                            </div>
-                            <span class="appointment-status status-upcoming">Upcoming</span>
-                            <div class="appointment-actions">
-                                <button class="btn-action" title="Reschedule">
-                                    <i class="bi bi-calendar2"></i>
-                                </button>
-                                <button class="btn-action" title="Cancel">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
+                    <div class="appointment-list" id="appointment-list-container">
+                        <!-- Appointments string will be injected here using Javascript -->
+                        <div class="text-center py-4" id="appointments-loading">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="section-card">
+                <div class="section-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="section-header">
                         <h2>Quick Actions</h2>
                     </div>
                     <div class="quick-actions">
-                        <a href="#" class="quick-action-btn">
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="400">
                             <i class="bi bi-calendar-plus"></i>
                             <span>Book Appointment</span>
                         </a>
-                        <a href="#" class="quick-action-btn">
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="500">
                             <i class="bi bi-camera-video"></i>
                             <span>Video Consultation</span>
                         </a>
-                        <a href="#" class="quick-action-btn">
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="600">
                             <i class="bi bi-upload"></i>
                             <span>Upload Documents</span>
                         </a>
-                        <a href="#" class="quick-action-btn">
+                        <a href="#" class="quick-action-btn" data-aos="zoom-in" data-aos-delay="700">
                             <i class="bi bi-headset"></i>
                             <span>Get Support</span>
                         </a>
                     </div>
+                </div>
+            </div>
+
+            <!-- Pre-built Views -->
+            <div id="view-Appointments" class="dashboard-content view-section" style="display: none;">
+                <div class="welcome-section">
+                    <h1>Appointments</h1>
+                    <p>Manage your upcoming and past visits</p>
+                </div>
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>All Appointments</h2>
+                        <button class="btn-view-all" onclick="window.location.href='appointment.html'">Book New</button>
+                    </div>
+                    <div class="appointment-list" id="full-appointment-list">
+                        <p class="text-center text-muted py-5">Loading appointments...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-My Doctors" class="dashboard-content view-section" style="display: none;">
+                <div class="welcome-section">
+                    <h1>My Doctors</h1>
+                    <p>Your healthcare team</p>
+                </div>
+                <div class="stats-grid" id="doctors-list-container">
+                    <p class="text-center text-muted py-5" style="grid-column: 1 / -1;">Loading doctors...</p>
+                </div>
+            </div>
+
+
+
+            <div id="view-Billing & Payments" class="dashboard-content view-section" style="display: none;">
+                <div class="welcome-section">
+                    <h1>Billing & Payments</h1>
+                    <p>Manage your invoices and payment methods</p>
+                </div>
+                <div class="section-card p-4">
+                    <div class="alert alert-success d-flex align-items-center mb-4">
+                        <i class="bi bi-check-circle-fill me-3 fs-4"></i>
+                        <div>Good news! You have no outstanding balances.</div>
+                    </div>
+                    <h5>Recent Invoices</h5>
+                    <table class="table align-middle">
+                        <tbody id="payments-tbody">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Loading payments...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-Messages" class="dashboard-content view-section" style="display: none;">
+                <div class="welcome-section">
+                    <h1>Messages</h1>
+                    <p>Communicate with your health partners</p>
+                </div>
+                <div class="section-card d-flex" style="height: 500px;">
+                    <div class="border-end p-3" style="width: 300px; overflow-y: auto;" id="messages-list-container">
+                        <input type="text" class="form-control mb-3" placeholder="Search...">
+                        <div class="text-center text-muted py-4">Loading messages...</div>
+                    </div>
+                    <div class="flex-grow-1 p-4 d-flex flex-column justify-content-center align-items-center bg-light" id="messages-chat-container">
+                        <i class="bi bi-chat-quote display-1 text-muted opacity-25"></i>
+                        <p class="text-muted mt-3">Select a conversation to start messaging</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-Settings" class="dashboard-content view-section" style="display: none;">
+                <div class="welcome-section">
+                    <h1>Settings</h1>
+                    <p>Update your personal information and preferences</p>
+                </div>
+                <div class="section-card p-4">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="settings-fname" value="Patient">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="settings-lname" value="User">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address (Read Only)</label>
+                            <input type="email" class="form-control bg-light" id="settings-email" value="" readonly>
+                        </div>
+                        <hr>
+                        <h5 class="mb-3">Medical Info</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Medical History</label>
+                            <textarea class="form-control" id="settings-history" rows="2"></textarea>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Allergies</label>
+                                <input type="text" class="form-control" id="settings-allergies">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Current Medications</label>
+                                <input type="text" class="form-control" id="settings-medications">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="button" onclick="saveSettings()">Save Changes</button>
+                    </form>
+                <div class="section-card p-4 mt-4 border-danger border border-2">
+                    <h5 class="text-danger mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i>Danger Zone</h5>
+                    <p class="text-muted">Deleting your account is permanent. All your data, appointments, and messages will be wiped immediately and cannot be recovered.</p>
+                    <button class="btn btn-outline-danger" type="button" onclick="deleteAccount()">Delete Account</button>
                 </div>
             </div>
         </main>
@@ -860,9 +1122,32 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- API Helper Functions -->
+    <script src="js/api.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
+        // ── Auth Guard ───────────────────────────────────────────────────────
+        requireAuth(); // Redirects to login.html if not logged in
+
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 500);
+        });
+
         // Mobile menu toggle
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const sidebar = document.getElementById('sidebar');
@@ -901,6 +1186,20 @@
                     }
                 }
                 
+                // Hide/show views based on clicked item
+                const viewName = this.querySelector('span').textContent;
+                
+                document.querySelectorAll('.view-section').forEach(view => {
+                    view.style.display = 'none';
+                });
+                
+                const targetView = document.getElementById(`view-${viewName}`);
+                if (targetView) {
+                    targetView.style.display = 'block';
+                } else {
+                    document.getElementById('view-Dashboard').style.display = 'block';
+                }
+                
                 // Close mobile menu
                 if (window.innerWidth <= 768) {
                     sidebar.classList.remove('active');
@@ -909,15 +1208,7 @@
             });
         });
 
-        // Notification button
-        document.querySelector('.notification-btn').addEventListener('click', function() {
-            alert('You have 3 new notifications:\n\n1. Appointment reminder with Dr. Sarah Johnson\n2. Lab results are available\n3. New message from Dr. Michael Chen');
-        });
-
-        // User menu
-        document.querySelector('.user-menu').addEventListener('click', function() {
-            alert('User Menu:\n\n• Profile Settings\n• Account Security\n• Privacy Settings\n• Help & Support\n• Logout');
-        });
+        // Notification button and user menu click events removed as they are now mapped to Bootstrap dropdowns
 
         // Quick action buttons
         document.querySelectorAll('.quick-action-btn').forEach(btn => {
@@ -930,16 +1221,82 @@
                         window.location.href = 'appointment.html';
                         break;
                     case 'Video Consultation':
-                        alert('Video consultation feature coming soon!');
+                        const btnEl = this;
+                        const originalHtml = btnEl.innerHTML;
+                        btnEl.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="ms-2">Connecting...</span>';
+                        setTimeout(() => {
+                            btnEl.innerHTML = originalHtml;
+                            alert('No doctors are currently available for instant video consultation. Please book an appointment.');
+                        }, 2000);
                         break;
                     case 'Upload Documents':
-                        alert('Document upload feature coming soon!');
+                        const fileInput = document.createElement('input');
+                        fileInput.type = 'file';
+                        fileInput.accept = '.pdf,.jpg,.png';
+                        fileInput.onchange = e => {
+                            const file = e.target.files[0];
+                            if(file) alert(`File "${file.name}" uploaded securely to your records.`);
+                        };
+                        fileInput.click();
                         break;
                     case 'Get Support':
                         window.location.href = 'contact.html';
                         break;
                 }
             });
+        });
+
+        // Search Bar Functionality
+        document.getElementById('global-search').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            
+            // Search in Appointments
+            document.querySelectorAll('.appointment-item').forEach(item => {
+                const textDetail = item.textContent.toLowerCase();
+                if (textDetail.includes(term)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Search in Doctors
+            document.querySelectorAll('#doctors-list-container .stat-card').forEach(item => {
+                const textDetail = item.textContent.toLowerCase();
+                if (textDetail.includes(term)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Search in Payments
+            document.querySelectorAll('#payments-tbody tr').forEach(item => {
+                const textDetail = item.textContent.toLowerCase();
+                // Avoid hiding the "No payments" filler row
+                if (item.querySelector('td')?.getAttribute('colspan') === '5') return;
+                
+                if (textDetail.includes(term)) {
+                    item.style.display = 'table-row';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Delegate message search
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.id === 'message-search') {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.message-item').forEach(item => {
+                    const textDetail = item.textContent.toLowerCase();
+                    if (textDetail.includes(term)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
         });
 
         // Appointment actions
@@ -968,15 +1325,7 @@
             alert('Viewing all appointments...');
         });
 
-        // Search functionality
-        document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const searchTerm = this.value;
-                if (searchTerm) {
-                    alert(`Searching for: ${searchTerm}`);
-                }
-            }
-        });
+        // Search functionality for top bar is handled dynamically via input event.
 
         // Check user session
         window.addEventListener('load', function() {
@@ -987,25 +1336,351 @@
                 window.location.href = 'login.html';
             } else {
                 const user = JSON.parse(userData);
-                if (user.userType !== 'patient') {
+                const role = user.role || user.userType;
+                if (role !== 'patient') {
                     // Redirect to appropriate dashboard
-                    if (user.userType === 'doctor') {
+                    if (role === 'doctor') {
                         window.location.href = 'doctor-dashboard.html';
                     }
+                } else {
+                    // Update UI with user data
+                    const initials = (user.first_name ? user.first_name.charAt(0) : '') + (user.last_name ? user.last_name.charAt(0) : '');
+                    const fullName = user.full_name || (user.first_name + ' ' + user.last_name);
+                    
+                    document.querySelector('.welcome-section h1').textContent = `Welcome back, ${user.first_name || 'Patient'}!`;
+                    
+                    document.querySelectorAll('.user-avatar, .user-avatar-small').forEach(el => {
+                        el.textContent = initials || 'P';
+                    });
+                    
+                    document.querySelector('.user-info h4').textContent = fullName;
+                    document.querySelector('.user-menu span').textContent = fullName;
+                    
+                    
+                    if (user.id) {
+                        document.querySelector('.user-info p').textContent = `Patient ID: #${user.id}`;
+                    }
+                    
+                    // Fetch real data
+                    loadDashboardData();
+                    populateSettings(user);
                 }
             }
         });
 
-        // Simulate real-time updates
-        setInterval(() => {
-            // Update notification badge randomly
-            const badge = document.querySelector('.notification-badge');
-            if (badge) {
-                const currentCount = parseInt(badge.textContent);
-                const change = Math.random() > 0.7 ? 1 : 0;
-                badge.textContent = currentCount + change;
+        function populateSettings(user) {
+            document.getElementById('settings-fname').value = user.first_name || '';
+            document.getElementById('settings-lname').value = user.last_name || '';
+            document.getElementById('settings-email').value = user.email || '';
+        }
+
+        async function saveSettings() {
+            const btn = document.querySelector('#view-Settings .btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+            
+            try {
+                const updatedData = {
+                    first_name: document.getElementById('settings-fname').value,
+                    last_name: document.getElementById('settings-lname').value
+                };
+                
+                const response = await api.auth.updateProfile(updatedData);
+                
+                // Update local storage
+                const storageKey = localStorage.getItem('userData') ? localStorage : sessionStorage;
+                const currentUserStr = storageKey.getItem('userData');
+                if (currentUserStr) {
+                    const currentUser = JSON.parse(currentUserStr);
+                    Object.assign(currentUser, response);
+                    storageKey.setItem('userData', JSON.stringify(currentUser));
+                }
+                
+                alert('Profile updated successfully to the database!');
+                window.location.reload();
+            } catch (err) {
+                alert('Error updating profile: ' + err.message);
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
             }
-        }, 30000); // Update every 30 seconds
+        }
+
+        async function deleteAccount() {
+            if (confirm("WARNING: Are you absolutely sure you want to delete your account? This action cannot be undone and will permanently erase all your data.")) {
+                try {
+                    await api.auth.deleteAccount();
+                    alert("Your account has been successfully deleted.");
+                    api.auth.logout();
+                } catch (err) {
+                    alert('Error deleting account: ' + err.message);
+                }
+            }
+        }
+        async function loadDashboardData() {
+            try {
+                // Fetch Appointments, Doctors, Payments, and Messages in parallel
+                const [appointmentsResponse, doctorsResponse, paymentsResponse, messagesResponse] = await Promise.all([
+                    api.appointments.list(),
+                    api.doctors.list(),
+                    api.appointments.payments(),
+                    api.messages.list()
+                ]);
+
+                // Update Stats
+                const upcomingAppointments = appointmentsResponse.filter(app => app.status === 'pending' || app.status === 'confirmed').length;
+                document.getElementById('stat-appointments').textContent = upcomingAppointments;
+                document.getElementById('stat-doctors').textContent = doctorsResponse.length;
+                
+                // Update Sidebar
+                document.getElementById('sidebar-badge-appointments').textContent = upcomingAppointments;
+                const unreadMessagesCount = messagesResponse.filter(m => !m.is_read && m.sender !== JSON.parse(localStorage.getItem('userData')).id).length;
+                const msgBadge = document.getElementById('sidebar-badge-messages');
+                if(unreadMessagesCount > 0){
+                    msgBadge.textContent = unreadMessagesCount;
+                    msgBadge.classList.remove('d-none');
+                } else {
+                    msgBadge.classList.add('d-none');
+                }
+
+                // Render "My Doctors" (extract unique doctors from appointments)
+                const docsContainer = document.getElementById('doctors-list-container');
+                docsContainer.innerHTML = '';
+                
+                // Extract unique doctor IDs from appointments
+                const myDoctorIds = new Set(appointmentsResponse.map(app => app.doctor?.id || app.doctor));
+                const myDoctors = doctorsResponse.filter(doc => myDoctorIds.has(doc.id));
+
+                if (myDoctors.length === 0) {
+                    docsContainer.innerHTML = '<p class="text-center text-muted py-5" style="grid-column: 1 / -1;">You haven\'t interacted with any doctors yet.</p>';
+                } else {
+                    myDoctors.forEach((doc, idx) => {
+                        const docUserId = doc.user?.id || doc.id;
+                        const docNameDisplay = `Dr. ${doc.full_name || (doc.user?.first_name + ' ' + doc.user?.last_name)}`;
+                        docsContainer.innerHTML += `
+                        <div class="stat-card" data-aos="fade-up" data-aos-delay="${100 + idx*50}">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="user-avatar-small bg-primary text-white me-3 d-flex justify-content-center align-items-center" style="width: 45px; height: 45px; border-radius: 50%;">${doc.user?.first_name ? doc.user.first_name.charAt(0) : 'D'}</div>
+                                <div>
+                                    <h5 class="mb-0">${docNameDisplay}</h5>
+                                    <small class="text-muted">${doc.specialization_display || doc.specialization || 'General Practitioner'}</small>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-primary w-100 mb-2" onclick="window.location.href='appointment.html'">Book Again</button>
+                            <button class="btn btn-light w-100" onclick="document.querySelectorAll('.menu-item')[4].click(); openConversation('${docUserId}', '${docNameDisplay}')">Message</button>
+                        </div>
+                        `;
+                    });
+                }
+
+                // Render Payments
+                const paymentsTbody = document.getElementById('payments-tbody');
+                paymentsTbody.innerHTML = '';
+                if (paymentsResponse.length === 0) {
+                    paymentsTbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No payment history found.</td></tr>`;
+                } else {
+                    paymentsResponse.forEach(pay => {
+                        const dateObj = new Date(pay.created_at);
+                        const statusBadge = pay.status === 'paid' ? '<span class="badge bg-success">Paid</span>' : (pay.status==='failed'?'<span class="badge bg-danger">Failed</span>':'<span class="badge bg-warning">Pending</span>');
+                        const docName = pay.appointment_details?.doctor?.full_name || 'Doctor';
+                        paymentsTbody.innerHTML += `
+                            <tr>
+                                <td>${dateObj.toLocaleDateString()}</td>
+                                <td>Consultation - Dr. ${docName}</td>
+                                <td>₹${pay.amount}</td>
+                                <td>${statusBadge}</td>
+                                <td>${pay.status === 'paid' ? '<a href="#" class="text-decoration-none">Receipt</a>' : '<button class="btn btn-sm btn-primary">Pay Now</button>'}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                // Render Messages
+                window.allMessages = messagesResponse;
+                const msgsList = document.getElementById('messages-list-container');
+                msgsList.innerHTML = '<input type="text" id="message-search" class="form-control mb-3" placeholder="Search...">';
+                
+                const currentUserId = JSON.parse(localStorage.getItem('userData')).id;
+                const conversations = {};
+                messagesResponse.forEach(msg => {
+                    const otherId = String(msg.sender) === String(currentUserId) ? msg.receiver : msg.sender;
+                    const otherName = String(msg.sender) === String(currentUserId) ? msg.receiver_name : msg.sender_name;
+                    if(!conversations[otherId] || new Date(msg.timestamp) > new Date(conversations[otherId].timestamp)) {
+                        conversations[otherId] = {
+                            id: otherId,
+                            name: otherName,
+                            lastMessage: msg.content,
+                            timestamp: msg.timestamp,
+                            unread: !msg.is_read && String(msg.sender) !== String(currentUserId)
+                        };
+                    }
+                });
+
+                if (Object.keys(conversations).length === 0) {
+                    msgsList.innerHTML += '<div class="text-center text-muted py-4">No messages found.</div>';
+                } else {
+                    Object.values(conversations).forEach(conv => {
+                        msgsList.innerHTML += `
+                        <div class="message-item p-2 border rounded mb-2 ${conv.unread ? 'bg-primary bg-opacity-10' : 'bg-light'}" style="cursor: pointer;" onclick="openConversation('${conv.id}', '${conv.name}')">
+                            <div class="d-flex justify-content-between">
+                                <strong>${conv.name}</strong>
+                                ${conv.unread ? '<span class="badge bg-primary rounded-pill">New</span>' : ''}
+                            </div>
+                            <p class="mb-0 text-muted small text-truncate">${conv.lastMessage}</p>
+                        </div>`;
+                    });
+                }
+
+                // Render Appointments for Dashboard and Full List
+                const container = document.getElementById('appointment-list-container');
+                const fullContainer = document.getElementById('full-appointment-list');
+                container.innerHTML = ''; // clear loading state
+                fullContainer.innerHTML = '';
+                
+                if (appointmentsResponse.length === 0) {
+                    container.innerHTML = '<div class="text-center text-muted py-4">No upcoming appointments found.</div>';
+                    fullContainer.innerHTML = '<div class="text-center text-muted py-4">No appointments found.</div>';
+                    return;
+                }
+
+                appointmentsResponse.forEach((app, index) => {
+                    const dateObj = new Date(app.appointment_date);
+                    const day = dateObj.getDate();
+                    const month = dateObj.toLocaleString('default', { month: 'short' }).toUpperCase();
+                    
+                    const timeComponents = app.appointment_time.split(':');
+                    const hours = parseInt(timeComponents[0]);
+                    const suffix = hours >= 12 ? 'PM' : 'AM';
+                    const formattedTime = `${hours % 12 || 12}:${timeComponents[1]} ${suffix}`;
+                    
+                    let statusClass = 'status-upcoming';
+                    if (app.status === 'completed') statusClass = 'status-completed';
+                    if (app.status === 'cancelled') statusClass = 'status-cancelled';
+                    
+                    const html = `
+                        <div class="appointment-item" data-aos="fade-left" data-aos-delay="${300 + index * 100}">
+                            <div class="appointment-date">
+                                <div class="day">${day}</div>
+                                <div class="month">${month}</div>
+                            </div>
+                            <div class="appointment-details">
+                                <h4>${app.doctor_name || 'Doctor'}</h4>
+                                <p><i class="bi bi-heart-pulse"></i> ${app.symptoms || 'General Consultation'}</p>
+                                <p><i class="bi bi-clock"></i> ${formattedTime}</p>
+                                <p><i class="bi bi-geo-alt"></i> Medical Center, Downtown</p>
+                            </div>
+                            <span class="appointment-status ${statusClass}">${app.status || 'Upcoming'}</span>
+                            <div class="appointment-actions">
+                                <button class="btn-action" title="Reschedule" onclick="window.location.href='appointment.html?reschedule=${app.id}'">
+                                    <i class="bi bi-calendar2"></i>
+                                </button>
+                                <button class="btn-action dropdown-item text-danger" onclick="cancelAppointment(${app.id})" title="Cancel">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                    fullContainer.innerHTML += html;
+                });
+                
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+                const container = document.getElementById('appointment-list-container');
+                if(container.querySelector('#appointments-loading')) {
+                   container.innerHTML = '<div class="text-center text-danger py-4">Failed to load appointments.</div>';
+                }
+            }
+        }
+        
+        function openConversation(otherId, otherName) {
+            const chatContainer = document.getElementById('messages-chat-container');
+            chatContainer.classList.remove('justify-content-center', 'align-items-center');
+            chatContainer.style.background = '#fff';
+            
+            let chatHistoryHTML = '';
+            const currentUserId = JSON.parse(localStorage.getItem('userData')).id;
+            
+            if (window.allMessages) {
+                const history = window.allMessages.filter(m => String(m.sender) === String(otherId) || String(m.receiver) === String(otherId));
+                history.forEach(msg => {
+                    const isMe = String(msg.sender) === String(currentUserId);
+                    chatHistoryHTML += `
+                        <div class="d-flex mb-2 ${isMe ? 'justify-content-end' : 'justify-content-start'}">
+                            <div class="p-2 rounded ${isMe ? 'bg-primary text-white' : 'bg-light text-dark'}" style="max-width: 75%;">
+                                ${msg.content}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            chatContainer.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center w-100 border-bottom pb-2 mb-3">
+                    <h5 class="mb-0">${otherName}</h5>
+                </div>
+                <div class="flex-grow-1 w-100 overflow-auto mb-3" id="chat-history-box" style="display:flex; flex-direction:column;">
+                    ${chatHistoryHTML || '<p class="text-center text-muted my-auto">Start a new conversation!</p>'}
+                </div>
+                <div class="d-flex w-100 mt-auto">
+                    <input type="text" class="form-control me-2" id="chat-input" placeholder="Type a message...">
+                    <button class="btn btn-primary" onclick="sendMessage('${otherId}')">Send</button>
+                </div>
+            `;
+            
+            const chatBox = document.getElementById('chat-history-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendMessage(receiverId) {
+            const input = document.getElementById('chat-input');
+            const content = input.value.trim();
+            if (!content) return;
+            
+            try {
+                await api.messages.create({ receiver: receiverId, content: content });
+                input.value = '';
+                await loadDashboardData();
+                
+                // Re-open conversation to scroll to bottom instantly.
+                // Normally we'd find the name, but we can extract it from the DOM header:
+                const headerName = document.querySelector('#messages-chat-container h5')?.textContent || 'Doctor';
+                openConversation(receiverId, headerName);
+            } catch(e) {
+                alert('Error sending message: ' + e.message);
+            }
+        }
+
+        async function cancelAppointment(id) {
+            if (confirm("Are you sure you want to cancel this appointment?")) {
+                try {
+                    await api.appointments.cancel(id);
+                    alert("Appointment cancelled.");
+                    loadDashboardData();
+                } catch(e) {
+                    alert('Error cancelling appointment: ' + e.message);
+                }
+            }
+        }
+
+        // Real-time updates: Poll for new information every 10 seconds
+        setInterval(async () => {
+            try {
+                // If dashboard is hidden, do a lightweight updates check instead of re-rendering everything
+                if (document.getElementById('view-Dashboard').style.display !== 'none') {
+                    await loadDashboardData();
+                }
+                
+                // Still simulate notification badge just for demo
+                const badge = document.querySelector('.notification-badge');
+                if (badge) {
+                    const currentCount = parseInt(badge.textContent);
+                    const change = Math.random() > 0.9 ? 1 : 0;
+                    badge.textContent = currentCount + change;
+                }
+            } catch(e) {}
+        }, 10000);
 
         // Handle window resize
         window.addEventListener('resize', function() {

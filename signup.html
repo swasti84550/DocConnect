@@ -524,6 +524,156 @@
         .strength-medium { background: var(--warning-orange); width: 66%; }
         .strength-strong { background: var(--success-green); width: 100%; }
 
+        /* Password Visibility Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-blue);
+        }
+
+        .form-floating {
+            position: relative;
+        }
+
+        /* Email Verification Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 450px;
+            width: 90%;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .resend-otp {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .resend-otp a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resend-otp a:hover {
+            text-decoration: underline;
+        }
+
+        /* Terms Modal */
+        .terms-content {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--light-blue);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-content h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .terms-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .terms-content ul {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
@@ -646,6 +796,32 @@
 
                 <!-- Sign Up Form -->
                 <form id="signupForm">
+                    <!-- Common Fields -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                                <label for="firstName">First Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                                <label for="lastName">Last Name</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                        <label for="email">Email Address</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="tel" class="form-control" id="phone" placeholder="Phone Number" required>
+                        <label for="phone">Phone Number</label>
+                    </div>
+
                     <!-- Patient Fields -->
                     <div id="patientFields">
                         <div class="form-floating">
@@ -688,34 +864,13 @@
                             <label for="experience">Years of Experience</label>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
-                                <label for="firstName">First Name</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
-                                <label for="lastName">Last Name</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-floating">
-                        <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
-                        <label for="email">Email Address</label>
-                    </div>
-
-                    <div class="form-floating">
-                        <input type="tel" class="form-control" id="phone" placeholder="Phone Number" required>
-                        <label for="phone">Phone Number</label>
-                    </div>
 
                     <div class="form-floating">
                         <input type="password" class="form-control" id="password" placeholder="Password" required>
                         <label for="password">Password</label>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="bi bi-eye"></i>
+                        </button>
                         <div class="password-strength" id="passwordStrength">
                             <div class="password-strength-bar" id="passwordStrengthBar"></div>
                         </div>
@@ -724,13 +879,22 @@
                     <div class="form-floating">
                         <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
                         <label for="confirmPassword">Confirm Password</label>
+                        <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
 
                     <div class="form-options">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="agreeTerms" required>
                             <label class="form-check-label" for="agreeTerms">
-                                I agree to the Terms & Conditions
+                                I agree to the <a href="#" id="termsLink">Terms & Conditions</a>
+                            </label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="enable2FA">
+                            <label class="form-check-label" for="enable2FA">
+                                Enable Two-Factor Authentication
                             </label>
                         </div>
                     </div>
@@ -810,12 +974,60 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- Terms & Conditions Modal -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeTermsModal">
+                <i class="bi bi-x"></i>
+            </button>
+            <div class="modal-header">
+                <h3><i class="bi bi-file-text"></i> Terms & Conditions</h3>
+                <p>Please read and accept our terms</p>
+            </div>
+            <div class="terms-content">
+                <h4>1. Acceptance of Terms</h4>
+                <p>By accessing and using DocConnect, you accept and agree to be bound by the terms and provisions of this agreement.</p>
+                
+                <h4>2. User Responsibilities</h4>
+                <p>Users are responsible for maintaining the confidentiality of their account information and for all activities that occur under their account.</p>
+                
+                <h4>3. Medical Disclaimer</h4>
+                <p>DocConnect is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician.</p>
+                
+                <h4>4. Privacy Policy</h4>
+                <p>Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your personal information.</p>
+                
+                <h4>5. Prohibited Activities</h4>
+                <ul>
+                    <li>Using the service for any illegal purpose</li>
+                    <li>Impersonating any person or entity</li>
+                    <li>Interfering with or disrupting the service</li>
+                    <li>Attempting to gain unauthorized access to the system</li>
+                </ul>
+                
+                <h4>6. Limitation of Liability</h4>
+                <p>DocConnect shall not be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
+                
+                <h4>7. Changes to Terms</h4>
+                <p>We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of the modified terms.</p>
+            </div>
+            <button class="btn btn-signup w-100" id="acceptTerms">
+                <i class="bi bi-check-circle"></i> I Accept
+            </button>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- API Helper Functions -->
+    <script src="js/api.js"></script>
     
     <script>
+        // ── Auth Guard (guest-only page) ─────────────────────────────────────
+        requireGuest(); // Already logged-in users go to their dashboard
+
         // Initialize AOS
         AOS.init({
             duration: 800,
@@ -916,7 +1128,7 @@
         });
 
         // Form Validation and Submission
-        signupForm.addEventListener('submit', function(e) {
+        signupForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Hide any existing messages
@@ -1021,13 +1233,30 @@
                 }
             }
             
-            // Simulate successful registration
+            // Call backend API for registration
             const signupBtn = document.getElementById('signupBtn');
             const originalText = signupBtn.innerHTML;
             signupBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating Account...';
             signupBtn.disabled = true;
-            
-            setTimeout(() => {
+
+            const userData = {
+                email: email,
+                first_name: firstName,
+                last_name: lastName,
+                phone: phone,
+                password: password,
+                password_confirm: confirmPassword,
+                role: userType
+            };
+
+            // Add patient-specific fields
+            if (userType === 'patient') {
+                userData.date_of_birth = document.getElementById('dateOfBirth').value;
+            }
+
+            try {
+                const response = await api.auth.register(userData);
+                
                 showSuccess(`Registration successful! Welcome to DocConnect as a ${userType}. Redirecting to login...`);
                 
                 // Reset form
@@ -1039,10 +1268,12 @@
                     window.location.href = 'login.html';
                 }, 2000);
                 
-                // Reset button
+            } catch (error) {
+                showError(error.message || 'Registration failed. Please try again.');
+            } finally {
                 signupBtn.innerHTML = originalText;
                 signupBtn.disabled = false;
-            }, 1500);
+            }
         });
 
         // Social Login Buttons
@@ -1080,18 +1311,56 @@
             }, 5000);
         }
 
-        // Real-time validation
-        document.getElementById('confirmPassword').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
+        // Password visibility toggles
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
             
-            if (confirmPassword && password !== confirmPassword) {
-                this.style.borderColor = 'var(--danger-red)';
-            } else if (confirmPassword && password === confirmPassword) {
-                this.style.borderColor = 'var(--success-green)';
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
             } else {
-                this.style.borderColor = 'var(--border-color)';
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
             }
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('confirmPassword');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Terms Modal
+        const termsModal = document.getElementById('termsModal');
+        const termsLink = document.getElementById('termsLink');
+        const closeTermsModal = document.getElementById('closeTermsModal');
+        const acceptTerms = document.getElementById('acceptTerms');
+        const agreeTermsCheckbox = document.getElementById('agreeTerms');
+
+        termsLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            termsModal.classList.add('active');
+        });
+
+        closeTermsModal.addEventListener('click', function() {
+            termsModal.classList.remove('active');
+        });
+
+        acceptTerms.addEventListener('click', function() {
+            agreeTermsCheckbox.checked = true;
+            termsModal.classList.remove('active');
         });
     </script>
 </body>

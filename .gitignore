@@ -1,0 +1,16 @@
+# Python / Django
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+.pytest_cache/
+
+# Environment Variables
+.env
+.env.*
+
+# OS generated
+.DS_Store
+Thumbs.db
