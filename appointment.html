@@ -723,6 +723,9 @@
             }
         }
     </style>
+
+    <!-- Global Dark Mode CSS -->
+    <link href="css/global-dark.css" rel="stylesheet">
 </head>
 <body>
     <!-- Loading Screen -->
@@ -742,26 +745,35 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
+                        <a class="nav-link" href="index.html" data-i18n="nav_home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="doctors.html">Doctors</a>
+                        <a class="nav-link" href="doctors.html" data-i18n="nav_doctors">Doctors</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="appointment.html">Book Appointment</a>
+                        <a class="nav-link active" href="appointment.html" data-i18n="nav_book">Book Appointment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
+                        <a class="nav-link" href="contact.html" data-i18n="nav_contact">Contact</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.html">Login</a>
+                        <a class="nav-link" href="login.html" data-i18n="nav_login">Login</a>
                     </li>
                     <li class="nav-item ms-2">
-                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'">
+                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'" data-i18n="nav_book">
                             <i class="bi bi-calendar-check"></i> Book Now
                         </button>
                     </li>
                 </ul>
+                <div class="nav-extras">
+                    <div class="language-selector">
+                        <select id="languageSelector">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी (Hindi)</option>
+                            <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -1444,5 +1456,13 @@
         // Initialize progress steps
         updateProgressSteps();
     </script>
+
+    <!-- Custom Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/languages.js"></script>
+    <script src="js/i18n.js"></script>
+
+    <!-- Global Dark Mode JS -->
+    <script src="js/global-dark.js"></script>
 </body>
 </html>

@@ -860,15 +860,82 @@ body.dark-mode .navbar {
     background: rgba(18, 18, 18, 0.95) !important;
 }
 
+body.dark-mode .navbar-brand {
+    color: var(--light-blue) !important;
+}
+
+body.dark-mode .navbar-nav .nav-link {
+    color: #f5f5f5 !important;
+}
+
+body.dark-mode .navbar-nav .nav-link:hover,
+body.dark-mode .navbar-nav .nav-link.active {
+    background: #1a1a2e;
+    color: var(--primary-light) !important;
+}
+
+body.dark-mode .hero-section {
+    background: linear-gradient(135deg, #121212 0%, #1a1a2e 50%, #121212 100%);
+}
+
+body.dark-mode .features-section,
+body.dark-mode .testimonials-section,
+body.dark-mode .blog-section,
+body.dark-mode .faq-section {
+    background: #121212;
+}
+
+body.dark-mode .how-it-works {
+    background: linear-gradient(135deg, #1a1a2e 0%, #121212 100%);
+}
+
 body.dark-mode .feature-card,
 body.dark-mode .step-card,
-body.dark-mode .testimonial-card {
+body.dark-mode .testimonial-card,
+body.dark-mode .faq-item,
+body.dark-mode .blog-card {
     background: #1e1e1e;
     border-color: #3a3a3a;
 }
 
-body.dark-mode .section-title {
-    color: var(--text-dark);
+body.dark-mode .section-title,
+body.dark-mode .hero-content h1,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode .blog-title {
+    color: #f5f5f5;
+}
+
+body.dark-mode .hero-content p,
+body.dark-mode .section-subtitle,
+body.dark-mode p {
+    color: #b0b0b0;
+}
+
+body.dark-mode .testimonial-tab {
+    background: #1e1e1e;
+    color: var(--primary-light);
+}
+
+body.dark-mode .btn-hero-secondary {
+    background: #1e1e1e;
+    color: var(--primary-light);
+}
+
+body.dark-mode .chat-popup {
+    background: #1e1e1e;
+    border-color: #3a3a3a;
+}
+
+body.dark-mode .chat-message.bot .chat-bubble {
+    background: #2a2a3e;
+    color: #f5f5f5;
+}
+
+body.dark-mode .chat-input {
+    background: #121212;
+    color: #f5f5f5;
+    border-color: #3a3a3a;
 }
 
 /* FAQ Section */
@@ -1195,6 +1262,9 @@ body.dark-mode .section-title {
             background: var(--dark-blue);
         }
     </style>
+
+    <!-- Global Dark Mode CSS -->
+    <link href="css/global-dark.css" rel="stylesheet">
 </head>
 <body>
     <!-- Loading Screen -->
@@ -1219,33 +1289,32 @@ body.dark-mode .section-title {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
+                        <a class="nav-link active" href="index.html" data-i18n="nav_home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="doctors.html">Doctors</a>
+                        <a class="nav-link" href="doctors.html" data-i18n="nav_doctors">Doctors</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="appointment.html">Book Appointment</a>
+                        <a class="nav-link" href="appointment.html" data-i18n="nav_book">Book Appointment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
+                        <a class="nav-link" href="contact.html" data-i18n="nav_contact">Contact</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.html">Login</a>
+                        <a class="nav-link" href="login.html" data-i18n="nav_login">Login</a>
                     </li>
                     <li class="nav-item ms-2">
-                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'">
+                        <button class="btn btn-book-nav" onclick="window.location.href='appointment.html'" data-i18n="nav_book">
                             <i class="bi bi-calendar-check"></i> Book Now
                         </button>
                     </li>
                 </ul>
                 <div class="nav-extras">
                     <div class="language-selector">
-                        <select id="languageSelect">
+                        <select id="languageSelector">
                             <option value="en">English</option>
-                            <option value="es">Español</option>
-                            <option value="fr">Français</option>
-                            <option value="de">Deutsch</option>
+                            <option value="hi">हिंदी (Hindi)</option>
+                            <option value="or">ଓଡ଼ିଆ (Odia)</option>
                         </select>
                     </div>
                     <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle Dark Mode">
@@ -1261,13 +1330,13 @@ body.dark-mode .section-title {
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
-                    <h1>Connect with <span>Trusted Doctors</span> Anytime, Anywhere</h1>
-                    <p>Experience the future of healthcare with smart time-slot based appointment booking, real-time availability, and seamless doctor-patient communication.</p>
+                    <h1 data-i18n="hero_title">Connect with <span>Trusted Doctors</span> Anytime, Anywhere</h1>
+                    <p data-i18n="hero_subtitle">Experience the future of healthcare with smart time-slot based appointment booking, real-time availability, and seamless doctor-patient communication.</p>
                     <div class="hero-buttons">
-                        <button class="btn btn-hero-primary" onclick="window.location.href='appointment.html'">
+                        <button class="btn btn-hero-primary" onclick="window.location.href='appointment.html'" data-i18n="nav_book">
                             <i class="bi bi-calendar-check"></i> Book Appointment
                         </button>
-                        <button class="btn btn-hero-secondary" onclick="window.location.href='doctors.html'">
+                        <button class="btn btn-hero-secondary" onclick="window.location.href='doctors.html'" data-i18n="nav_doctors">
                             <i class="bi bi-people"></i> Find Doctors
                         </button>
                     </div>
@@ -1281,15 +1350,15 @@ body.dark-mode .section-title {
                             <div class="hero-stats">
                                 <div class="hero-stat-item">
                                     <span class="hero-stat-number">10K+</span>
-                                    <span class="hero-stat-label">Patients</span>
+                                    <span class="hero-stat-label" data-i18n="stat_patients">Patients</span>
                                 </div>
                                 <div class="hero-stat-item">
                                     <span class="hero-stat-number">500+</span>
-                                    <span class="hero-stat-label">Doctors</span>
+                                    <span class="hero-stat-label" data-i18n="stat_doctors">Doctors</span>
                                 </div>
                                 <div class="hero-stat-item">
                                     <span class="hero-stat-number">50K+</span>
-                                    <span class="hero-stat-label">Appointments</span>
+                                    <span class="hero-stat-label" data-i18n="nav_appointments">Appointments</span>
                                 </div>
                             </div>
                         </div>
@@ -1303,36 +1372,36 @@ body.dark-mode .section-title {
     <section class="features-section" id="features">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">Why Choose DocConnect?</h2>
-                <p class="section-subtitle">Experience the future of healthcare appointment booking with our cutting-edge features</p>
+                <h2 class="section-title" data-i18n="section_features_title">Why Choose DocConnect?</h2>
+                <p class="section-subtitle" data-i18n="section_features_subtitle">Experience the future of healthcare appointment booking with our cutting-edge features</p>
             </div>
             
             <div class="row g-4">
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="bi bi-clock-history"></i>
+                            <i class="bi bi-robot"></i>
                         </div>
-                        <h3>Smart Time-Slot Booking</h3>
-                        <p>Intelligent scheduling system that shows real-time availability and helps you find the perfect time slot instantly.</p>
+                        <h3 data-i18n="feature_1_title">Smart AI Chatbot</h3>
+                        <p data-i18n="feature_1_desc">Get instant answers to your medical queries and find the right doctor using our AI assistant.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="bi bi-clipboard-check"></i>
+                            <i class="bi bi-calendar-check"></i>
                         </div>
-                        <h3>Status Tracking</h3>
-                        <p>Stay updated with real-time notifications about your appointment status and any changes via email and SMS.</p>
+                        <h3 data-i18n="feature_2_title">Easy Scheduling</h3>
+                        <p data-i18n="feature_2_desc">Book, reschedule, or cancel appointments with just a few clicks from your personalized dashboard.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="bi bi-geo-alt"></i>
+                            <i class="bi bi-shield-check"></i>
                         </div>
-                        <h3>Maps Integration</h3>
-                        <p>Easily locate clinics and hospitals with integrated Google Maps and turn-by-turn navigation assistance.</p>
+                        <h3 data-i18n="feature_3_title">Verified Profiles</h3>
+                        <p data-i18n="feature_3_desc">Access detailed profiles of verified medical professionals with real patient reviews and ratings.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
@@ -1386,13 +1455,13 @@ body.dark-mode .section-title {
     <section class="testimonials-section">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">What Our Community Says</h2>
-                <p class="section-subtitle">Read testimonials from our satisfied patients and doctors</p>
+                <h2 class="section-title" data-i18n="testimonial_title">What Our Community Says</h2>
+                <p class="section-subtitle" data-i18n="testimonial_subtitle">Read testimonials from our satisfied patients and doctors</p>
             </div>
             
             <div class="testimonial-tabs" data-aos="fade-up" data-aos-delay="100">
-                <button class="testimonial-tab active" data-tab="patients">Patients</button>
-                <button class="testimonial-tab" data-tab="doctors">Doctors</button>
+                <button class="testimonial-tab active" data-tab="patients" data-i18n="tab_patients">Patients</button>
+                <button class="testimonial-tab" data-tab="doctors" data-i18n="tab_doctors">Doctors</button>
             </div>
             
             <div id="patientTestimonials" class="row g-4">
@@ -1521,8 +1590,8 @@ body.dark-mode .section-title {
     <section class="faq-section" id="faq">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">Frequently Asked Questions</h2>
-                <p class="section-subtitle">Find answers to common questions about DocConnect</p>
+                <h2 class="section-title" data-i18n="faq_title">Frequently Asked Questions</h2>
+                <p class="section-subtitle" data-i18n="faq_subtitle">Find answers to common questions about DocConnect</p>
             </div>
             
             <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
@@ -1810,12 +1879,26 @@ body.dark-mode .section-title {
             alert('Language changed to: ' + this.options[this.selectedIndex].text);
         });
 
-        // Dark Mode Toggle
+        // Dark Mode Toggle Logic
         const darkModeToggle = document.getElementById('darkModeToggle');
+        const icon = darkModeToggle.querySelector('i');
+        
+        // Check for saved preference
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            icon.classList.remove('bi-moon');
+            icon.classList.add('bi-sun');
+        }
+
         darkModeToggle.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
-            const icon = this.querySelector('i');
-            if (document.body.classList.contains('dark-mode')) {
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            // Save to localStorage
+            localStorage.setItem('darkMode', isDark);
+
+            if (isDark) {
                 icon.classList.remove('bi-moon');
                 icon.classList.add('bi-sun');
             } else {
@@ -1946,5 +2029,11 @@ body.dark-mode .section-title {
             });
         });
     </script>
+
+    <!-- Global Dark Mode JS -->
+    <script src="js/global-dark.js"></script>
+    <!-- Localization JS -->
+    <script src="js/languages.js"></script>
+    <script src="js/i18n.js"></script>
 </body>
 </html>
